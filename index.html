@@ -79,11 +79,14 @@
             background-color: var(--dark);
             color: var(--text-color);
             line-height: 1.6;
+            display: flex; /* Added to center main content area on large screens */
+            justify-content: center;
         }
 
         .container {
             display: flex;
-            min-height: 100vh;
+            width: 100%;
+            max-width: 1800px; /* Optional: Max width for the entire layout */
         }
 
         .sidebar {
@@ -119,13 +122,11 @@
 
         .main-content {
             flex-grow: 1;
-            margin-left: var(--sidebar-width);
+            margin-left: var(--sidebar-width); /* Space for the sidebar */
             padding: 40px;
             transition: margin-left 0.3s ease-in-out;
             position: relative;
             background-color: var(--dark);
-            max-width: 1400px; /* Max-width for very large screens */
-            margin: 0 auto;
         }
 
         .main-content.expanded { margin-left: 0; }
