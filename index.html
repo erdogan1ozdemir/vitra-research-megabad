@@ -1083,11 +1083,14 @@
                 reuter: [32, 41, 19, 4, 2, 2],
                 megabad: [50.75, 20.35, 15, 8, 2.5, 3.4]
             };
-            const germanBathroomKeywordsData = {
-                keywords: ['waschbecken', 'badmöbel', 'badewanne', 'duschkabine', 'spiegelschrank', 'badezimmer'],
-                monthlyVolume: [74000, 44000, 43000, 35000, 23000, 40500],
-                competitionLevel: ['Very High', 'High', 'High', 'Medium', 'Medium', 'High']
-            };
+            const germanBathroomKeywordsData = [
+                { keyword: 'waschbecken',   volume: 74000, competition: 'Very High', y: 90 },
+                { keyword: 'badmöbel',      volume: 44000, competition: 'High',      y: 70 },
+                { keyword: 'badewanne',     volume: 43000, competition: 'High',      y: 60 },
+                { keyword: 'duschkabine',   volume: 35000, competition: 'Medium',    y: 50 },
+                { keyword: 'spiegelschrank',volume: 23000, competition: 'Medium',    y: 40 },
+                { keyword: 'badezimmer',    volume: 40500, competition: 'High',      y: 80 }
+            ];
             const megabadCustomerReviewsData = {
                 Platform: ["Trusted Shops", "Google Reviews", "Trustpilot", "Idealo"],
                 Rating: [4.7, 4.2, 3.8, 4.5],
@@ -1301,14 +1304,14 @@
                 createChart('germanBathroomKeywordsBubbleChart', {
                     type: 'bubble',
                     data: {
-                        datasets: germanBathroomKeywordsData.keywords.map((kw, i) => ({
-                            label: kw,
+                        datasets: germanBathroomKeywordsData.map((item) => ({
+                            label: item.keyword,
                             data: [{
-                                x: germanBathroomKeywordsData.monthlyVolume[i],
-                                y: Math.random() * 100,
-                                r: Math.sqrt(germanBathroomKeywordsData.monthlyVolume[i] / 500)
+                                x: item.volume,
+                                y: item.y,
+                                r: Math.sqrt(item.volume / 500)
                             }],
-                            backgroundColor: competitionMap[germanBathroomKeywordsData.competitionLevel[i]]
+                            backgroundColor: competitionMap[item.competition]
                         }))
                     },
                     options: {
