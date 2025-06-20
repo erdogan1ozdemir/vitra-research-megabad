@@ -411,6 +411,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             padding: 28px;
             border: 1px solid var(--highlight-border);
+            position: relative; /* Added for correct chart sizing */
         }
         .chart-container h4 {
             text-align: center;
@@ -514,6 +515,7 @@
             color: var(--light-muted);
             text-align: right;
             margin-top: 20px;
+            word-wrap: break-word;
         }
 
         @media (max-width: 1024px) {
@@ -1053,8 +1055,7 @@
             Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.2)';
             Chart.defaults.color = '#F0F0F0';
             Chart.defaults.responsive = true;
-            Chart.defaults.maintainAspectRatio = false;
-
+            
             function getCssVarValue(varName) { return getComputedStyle(document.documentElement).getPropertyValue(varName).trim(); }
 
             // Chart Data & Colors
@@ -1120,6 +1121,7 @@
                         }]
                     },
                     options: { 
+                        maintainAspectRatio: false,
                         indexAxis: 'y', 
                         plugins: { 
                             legend: { display: false }, 
@@ -1153,6 +1155,7 @@
                         }]
                     },
                     options: { 
+                        maintainAspectRatio: false, 
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
@@ -1179,11 +1182,12 @@
                         }]
                     },
                     options: { 
+                        maintainAspectRatio: false,
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
                             datalabels: { 
-                                formatter: (v) => v + '%', 
+                                formatter: (v) => v.toFixed(1) + '%', 
                                 color: '#fff',
                                 anchor: 'end',
                                 align: 'top',
@@ -1209,6 +1213,7 @@
                         }]
                     },
                     options: { 
+                        maintainAspectRatio: false,
                         plugins: { 
                             legend: { display: false }, 
                             title: { display: false }, 
@@ -1238,6 +1243,7 @@
                          }]
                     },
                     options: { 
+                        maintainAspectRatio: false,
                         indexAxis: 'y', 
                         plugins: { 
                             legend: { display: false }, 
@@ -1269,6 +1275,7 @@
                         }]
                     },
                     options: { 
+                        maintainAspectRatio: false,
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
@@ -1296,6 +1303,7 @@
                         }))
                     },
                     options: {
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false },
                             title: { display: false },
