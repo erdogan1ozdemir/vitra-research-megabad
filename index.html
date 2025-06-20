@@ -1086,7 +1086,8 @@
             const germanBathroomKeywordsData = {
                 keywords: ['waschbecken', 'badmöbel', 'badewanne', 'duschkabine', 'spiegelschrank', 'badezimmer'],
                 monthlyVolume: [74000, 44000, 43000, 35000, 23000, 40500],
-                competitionLevel: ['Very High', 'High', 'High', 'Medium', 'Medium', 'High']
+                competitionLevel: ['Very High', 'High', 'High', 'Medium', 'Medium', 'High'],
+                yValues: [90, 70, 60, 50, 40, 80]
             };
             const megabadCustomerReviewsData = {
                 Platform: ["Trusted Shops", "Google Reviews", "Trustpilot", "Idealo"],
@@ -1305,7 +1306,7 @@
                             label: kw,
                             data: [{
                                 x: germanBathroomKeywordsData.monthlyVolume[i],
-                                y: Math.random() * 100,
+                                y: germanBathroomKeywordsData.yValues[i],
                                 r: Math.sqrt(germanBathroomKeywordsData.monthlyVolume[i] / 500)
                             }],
                             backgroundColor: competitionMap[germanBathroomKeywordsData.competitionLevel[i]]
