@@ -57,7 +57,6 @@
             --card-padding: 1.8rem;
             --card-radius: 12px;
             --shadow-intensity: 0.3;
-            --chart-height: 420px;
             --sidebar-width: 280px;
 
             /* Sidebar Aktif/Hover Renkleri */
@@ -84,7 +83,9 @@
 
         .container {
             display: flex;
-            min-height: 100vh;
+            width: 100%;
+            max-width: 1800px; /* Optional: Max width for the entire layout */
+            margin: 0 auto; /* Center the container on very large screens */
         }
 
         .sidebar {
@@ -100,8 +101,6 @@
             z-index: 1000;
             transform: translateX(0);
         }
-
-        .sidebar.hidden { transform: translateX(-100%); }
 
         .logo {
             text-align: center;
@@ -120,15 +119,13 @@
 
         .main-content {
             flex-grow: 1;
-            margin-left: var(--sidebar-width);
+            margin-left: var(--sidebar-width); /* Space for the fixed sidebar */
             padding: 40px;
             transition: margin-left 0.3s ease-in-out;
             position: relative;
             background-color: var(--dark);
         }
-
-        .main-content.expanded { margin-left: 0; }
-
+        
         .header {
             position: relative;
             margin-bottom: 45px;
@@ -150,7 +147,7 @@
         
         .section {
             margin-bottom: var(--section-spacing);
-            scroll-margin-top: 80px; /* Adjusted for better scroll positioning */
+            scroll-margin-top: 80px;
         }
 
         .section-header {
@@ -172,6 +169,7 @@
             font-size: 22px;
             margin-right: 16px;
             color: var(--dark-sidebar);
+            flex-shrink: 0;
         }
 
         .section-title {
@@ -247,12 +245,6 @@
             gap: 25px;
             margin-top: 25px;
         }
-
-        @media (min-width: 992px) {
-            .content-block-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
         
         .content-block-grid .card { margin-bottom: 0; }
         
@@ -292,14 +284,15 @@
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 18px;
+            gap: 25px;
             margin: 35px 0;
+            justify-items: center; 
         }
 
         .stat-card {
             background-color: var(--card-bg);
             border-radius: var(--card-radius);
-            padding: var(--card-padding);
+            padding: 1.5rem 1rem;
             text-align: center;
             box-shadow: 0 5px 18px rgba(0, 0, 0, var(--shadow-intensity));
             border-top: 5px solid var(--primary);
@@ -307,8 +300,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             border: 1px solid var(--highlight-border);
+            width: 100%; 
+            min-height: 180px; 
         }
         
         .stat-card:hover {
@@ -316,15 +311,16 @@
             box-shadow: 0 10px 28px rgba(var(--primary-rgb), var(--shadow-intensity));
         }
         
-        .stat-icon { font-size: 2.2rem; color: var(--primary); margin-bottom: 16px; }
+        .stat-icon { font-size: 2.2rem; color: var(--primary); margin: 0; }
         .stat-value {
             font-family: 'Montserrat', sans-serif;
             font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin: 0.5rem 0; 
+            line-height: 1.2;
             color: var(--light);
         }
-        .stat-label { font-size: 0.95rem; color: var(--light-muted); }
+        .stat-label { font-size: 0.95rem; color: var(--light-muted); margin: 0; }
 
         .swot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0; }
         .swot-card {
@@ -404,15 +400,22 @@
         .data-table tr:last-child td { border-bottom: none; }
 
         .chart-container {
-            height: var(--chart-height);
+            height: auto;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            max-height: 500px; 
             margin: 40px 0;
             background: var(--card-bg);
             border-radius: var(--card-radius);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             padding: 28px;
             border: 1px solid var(--highlight-border);
-            position: relative; /* Added for correct chart sizing */
+            position: relative;
         }
+        .chart-container-square {
+             aspect-ratio: 1 / 1;
+        }
+
         .chart-container h4 {
             text-align: center;
             font-family: 'Montserrat', sans-serif;
@@ -441,7 +444,7 @@
         ul li, ol li { margin-bottom: 10px; color: var(--light-muted); font-size: 0.95rem; }
 
         .menu-toggle {
-            display: none; /* Hidden by default on desktop */
+            display: none;
             position: fixed;
             top: 20px;
             left: 20px;
@@ -460,29 +463,29 @@
         /* Sidebar Nav Styling */
         .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
         .sidebar nav ul li { margin-bottom: 0; }
-        .nav-group { margin-bottom: 10px; } /* Reduced from 13px */
+        .nav-group { margin-bottom: 10px; }
         .nav-group:last-child { margin-bottom: 0; }
         .nav-title {
-            padding: 6px 20px; /* Reduced from 8px */
-            font-size: 0.7rem; /* Reduced from 0.75rem */
+            padding: 6px 20px;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--light-muted);
             font-weight: 600;
-            margin-top: 8px; /* Reduced from 10px */
-            margin-bottom: 4px; /* Reduced from 5px */
+            margin-top: 8px; 
+            margin-bottom: 4px;
             border-bottom: 1px solid var(--highlight-border);
         }
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 8px 20px; /* Reduced from 10px */
+            padding: 8px 20px;
             color: var(--sidebar-normal-color);
             text-decoration: none;
             transition: all 0.2s ease;
             position: relative;
             cursor: pointer;
-            font-size: 0.9rem; /* Reduced from 0.95rem */
+            font-size: 0.9rem;
         }
         .nav-item i { font-size: 1.1em; margin-right: 12px; width: 20px; text-align: center; }
         .nav-item:hover {
@@ -519,6 +522,8 @@
         }
 
         @media (max-width: 1024px) {
+            body { justify-content: flex-start; } 
+            .container { flex-direction: column; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
             .main-content { margin-left: 0; padding: 20px; }
@@ -531,13 +536,19 @@
         @media (max-width: 768px) {
             .header h1 { font-size: 2.2rem; }
             .section-title { font-size: 1.8rem; }
-            .content-block-grid, .stat-grid {
-                grid-template-columns: 1fr 1fr; /* Force 2 columns on mobile */
+            .content-block-grid {
+                grid-template-columns: 1fr;
+            }
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+             .chart-container {
+                aspect-ratio: 1/1; 
             }
         }
-        @media (max-width: 480px) {
-            .content-block-grid, .stat-grid {
-                grid-template-columns: 1fr; /* Single column on very small screens */
+        @media (max-width: 576px) {
+            .stat-grid {
+                 grid-template-columns: 1fr;
             }
         }
 
@@ -796,7 +807,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="chart-container">
+                <div class="chart-container chart-container-square">
                      <h4>Megabad Müşteri Değerlendirmeleri (Platform Bazlı)</h4>
                      <canvas id="customerReviewsChart"></canvas>
                 </div>
@@ -817,7 +828,7 @@
                     <h4>En Çok Trafik Getiren Anahtar Kelimeler</h4>
                     <canvas id="keywordTrafficChart"></canvas>
                 </div>
-                 <div class="chart-container">
+                 <div class="chart-container chart-container-square">
                     <h4>Organik Trafiğin Sayfa Türüne Göre Dağılımı</h4>
                     <canvas id="pageTrafficChart"></canvas>
                 </div>
@@ -1164,7 +1175,7 @@
                         }]
                     },
                     options: { 
-                        maintainAspectRatio: false, // Set to false to fit container
+                        maintainAspectRatio: false, 
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
@@ -1284,7 +1295,7 @@
                         }]
                     },
                     options: { 
-                        maintainAspectRatio: false, // Set to false to fit container
+                        maintainAspectRatio: false, 
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
