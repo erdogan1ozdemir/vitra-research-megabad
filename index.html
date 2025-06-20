@@ -57,7 +57,6 @@
             --card-padding: 1.8rem;
             --card-radius: 12px;
             --shadow-intensity: 0.3;
-            --chart-height: 420px;
             --sidebar-width: 280px;
 
             /* Sidebar Aktif/Hover Renkleri */
@@ -294,6 +293,7 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 18px;
             margin: 35px 0;
+            justify-items: center; /* Center items within grid cells */
         }
 
         .stat-card {
@@ -309,6 +309,7 @@
             align-items: center;
             justify-content: center;
             border: 1px solid var(--highlight-border);
+            width: 100%; /* Ensure cards take full cell width */
         }
         
         .stat-card:hover {
@@ -404,7 +405,9 @@
         .data-table tr:last-child td { border-bottom: none; }
 
         .chart-container {
-            height: var(--chart-height);
+            height: auto; /* Changed from fixed height */
+            aspect-ratio: 16 / 10; /* Added for responsive aspect ratio */
+            max-height: 500px; /* Optional: to prevent it from becoming too tall on some screens */
             margin: 40px 0;
             background: var(--card-bg);
             border-radius: var(--card-radius);
@@ -413,6 +416,11 @@
             border: 1px solid var(--highlight-border);
             position: relative; /* Added for correct chart sizing */
         }
+        /* Special class for square-like charts (Pie/Doughnut) */
+        .chart-container-square {
+             aspect-ratio: 1 / 1;
+        }
+
         .chart-container h4 {
             text-align: center;
             font-family: 'Montserrat', sans-serif;
@@ -460,29 +468,29 @@
         /* Sidebar Nav Styling */
         .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
         .sidebar nav ul li { margin-bottom: 0; }
-        .nav-group { margin-bottom: 10px; } /* Reduced from 13px */
+        .nav-group { margin-bottom: 10px; } /* Reduced for compactness */
         .nav-group:last-child { margin-bottom: 0; }
         .nav-title {
-            padding: 6px 20px; /* Reduced from 8px */
-            font-size: 0.7rem; /* Reduced from 0.75rem */
+            padding: 6px 20px; /* Reduced */
+            font-size: 0.7rem; /* Reduced */
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--light-muted);
             font-weight: 600;
-            margin-top: 8px; /* Reduced from 10px */
-            margin-bottom: 4px; /* Reduced from 5px */
+            margin-top: 8px; /* Reduced */
+            margin-bottom: 4px; /* Reduced */
             border-bottom: 1px solid var(--highlight-border);
         }
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 8px 20px; /* Reduced from 10px */
+            padding: 8px 20px; /* Reduced */
             color: var(--sidebar-normal-color);
             text-decoration: none;
             transition: all 0.2s ease;
             position: relative;
             cursor: pointer;
-            font-size: 0.9rem; /* Reduced from 0.95rem */
+            font-size: 0.9rem; /* Reduced */
         }
         .nav-item i { font-size: 1.1em; margin-right: 12px; width: 20px; text-align: center; }
         .nav-item:hover {
@@ -533,6 +541,9 @@
             .section-title { font-size: 1.8rem; }
             .content-block-grid, .stat-grid {
                 grid-template-columns: 1fr 1fr; /* Force 2 columns on mobile */
+            }
+             .chart-container {
+                aspect-ratio: 1/1; /* Make charts more square on mobile */
             }
         }
         @media (max-width: 480px) {
@@ -796,7 +807,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="chart-container">
+                <div class="chart-container chart-container-square">
                      <h4>Megabad Müşteri Değerlendirmeleri (Platform Bazlı)</h4>
                      <canvas id="customerReviewsChart"></canvas>
                 </div>
@@ -817,7 +828,7 @@
                     <h4>En Çok Trafik Getiren Anahtar Kelimeler</h4>
                     <canvas id="keywordTrafficChart"></canvas>
                 </div>
-                 <div class="chart-container">
+                 <div class="chart-container chart-container-square">
                     <h4>Organik Trafiğin Sayfa Türüne Göre Dağılımı</h4>
                     <canvas id="pageTrafficChart"></canvas>
                 </div>
