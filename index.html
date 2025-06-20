@@ -460,29 +460,29 @@
         /* Sidebar Nav Styling */
         .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
         .sidebar nav ul li { margin-bottom: 0; }
-        .nav-group { margin-bottom: 13px; } /* Reduced from 15px */
+        .nav-group { margin-bottom: 10px; } /* Reduced from 13px */
         .nav-group:last-child { margin-bottom: 0; }
         .nav-title {
-            padding: 8px 20px;
-            font-size: 0.75rem;
+            padding: 6px 20px; /* Reduced from 8px */
+            font-size: 0.7rem; /* Reduced from 0.75rem */
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--light-muted);
             font-weight: 600;
-            margin-top: 10px;
-            margin-bottom: 5px;
+            margin-top: 8px; /* Reduced from 10px */
+            margin-bottom: 4px; /* Reduced from 5px */
             border-bottom: 1px solid var(--highlight-border);
         }
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 10px 20px; /* Reduced from 12px */
+            padding: 8px 20px; /* Reduced from 10px */
             color: var(--sidebar-normal-color);
             text-decoration: none;
             transition: all 0.2s ease;
             position: relative;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem; /* Reduced from 0.95rem */
         }
         .nav-item i { font-size: 1.1em; margin-right: 12px; width: 20px; text-align: center; }
         .nav-item:hover {
@@ -527,11 +527,20 @@
             .menu-toggle { display: flex; align-items: center; justify-content: center; }
             .swot-grid { grid-template-columns: 1fr; }
         }
+
         @media (max-width: 768px) {
             .header h1 { font-size: 2.2rem; }
             .section-title { font-size: 1.8rem; }
-            .content-block-grid { grid-template-columns: 1fr; }
+            .content-block-grid, .stat-grid {
+                grid-template-columns: 1fr 1fr; /* Force 2 columns on mobile */
+            }
         }
+        @media (max-width: 480px) {
+            .content-block-grid, .stat-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1155,7 +1164,7 @@
                         }]
                     },
                     options: { 
-                        maintainAspectRatio: false, 
+                        maintainAspectRatio: false, // Set to false to fit container
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
@@ -1275,7 +1284,7 @@
                         }]
                     },
                     options: { 
-                        maintainAspectRatio: false,
+                        maintainAspectRatio: false, // Set to false to fit container
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
