@@ -5,51 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Megabad.com Kapsamlı Pazar ve SEO Analizi Raporu</title>
     <link rel="icon" href="https://vitra.com/images/favicon/favicon.ico" type="image/x-icon">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- FONT AWESOME CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- CHART.JS ve Eklentileri için CDN Linkleri -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.1.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
     <style>
         :root {
-            /* VitrA Brand Colors - Adjusted for vibrancy and readability */
-            --primary: #00BFB3; /* VitrA Vivid Turquoise */
+            /* VitrA Marka Renkleri - Ayarlamalarla daha canlı ve okunabilir */
+            --primary: #00BFB3; /* VitrA Canlı Turkuaz */
             --primary-rgb: 0, 191, 179;
-            --secondary: #6B7A8F; /* VitrA Blue Gray */
+            --secondary: #6B7A8F; /* VitrA Mavi Gri */
             --secondary-rgb: 107, 122, 143;
 
-            /* Base Colors - For backgrounds and text */
-            --dark: #2c2c2c; /* Darker background for more contrast */
+            /* Temel Renkler - Arka plan ve metin için */
+            --dark: #2c2c2c; /* Daha koyu arka plan */
             --dark-sidebar: #1a1a1a;
             --light: #F8F8F8;
             --light-muted: #BCBCBC;
-            --background: #3a3a3a;
-
-            /* Status Colors - More vibrant VitrA tones */
+            --background: #3a3a3a; /* Kart arka planı */
+            
+            /* Durum Renkleri - VitrA tonlarında daha canlı */
             --success: #6ACCBC;
             --warning: #FFD166;
             --danger: #EF476F;
 
-            /* Accents and Borders */
+            /* Vurgu ve Kenarlıklar */
             --highlight-border: #555555;
             --highlight-bg: rgba(var(--primary-rgb), 0.1);
             --info-note-bg: rgba(var(--primary-rgb), 0.15);
             --info-note-border: var(--primary);
             
-            /* General Style Parameters */
+            /* Genel Stil Parametreleri */
             --text-color: var(--light);
             --heading-color: var(--light);
             --card-bg: var(--background);
             --shadow-color: rgba(0, 0, 0, 0.4);
             --border-color: var(--highlight-border);
 
-            /* Gradients */
+            /* Gradient Renkler */
             --gradient-1-start: var(--primary);
             --gradient-1-end: var(--secondary);
             --gradient-2-start: var(--warning);
             --gradient-2-end: var(--danger);
             
-            /* UI/UX Values */
+            /* UI/UX için ayarlanmış değerler */
             --base-font-size: 16px;
             --section-spacing: 60px;
             --card-padding: 1.8rem;
@@ -58,14 +63,14 @@
             --chart-height: 420px;
             --sidebar-width: 280px;
 
-            /* Sidebar Active/Hover Colors */
+            /* Sidebar Aktif/Hover Renkleri */
             --sidebar-active-bg: rgba(var(--primary-rgb), 0.25);
             --sidebar-hover-bg: rgba(var(--primary-rgb), 0.15);
             --sidebar-active-color: var(--primary);
             --sidebar-hover-color: var(--primary);
             --sidebar-normal-color: var(--light);
 
-            /* Link Color */
+            /* Link Rengi */
             --link-color: #43bab2;
         }
 
@@ -144,20 +149,13 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             font-size: 2.6rem;
-            margin-bottom: 14px;
+            margin: 0;
             color: var(--primary);
         }
         
-        .header p {
-            font-size: 1.1rem;
-            color: var(--light-muted);
-            max-width: 90%;
-            margin: 0 auto;
-        }
-
         .section {
             margin-bottom: var(--section-spacing);
-            scroll-margin-top: 40px;
+            scroll-margin-top: 80px; /* Adjusted for better scroll positioning */
         }
 
         .section-header {
@@ -224,13 +222,13 @@
             font-weight: 600;
         }
         
-        .card a {
+        .card a, .section-reference-link a {
             color: var(--link-color);
             text-decoration: underline;
             font-weight: 600;
         }
 
-        .card a:hover { color: var(--secondary); }
+        .card a:hover, .section-reference-link a:hover { color: var(--secondary); }
         
         .highlight-numerical {
             font-weight: 700;
@@ -245,6 +243,7 @@
         .content-block-grid {
             display: grid;
             gap: 25px;
+            margin-top: 25px;
         }
 
         @media (min-width: 992px) {
@@ -255,15 +254,6 @@
         
         .content-block-grid .card { margin-bottom: 0; }
         
-        .carousel-highlight {
-            background: var(--highlight-bg);
-            border-left: 5px solid var(--info-note-border);
-            padding: 16px;
-            margin: 16px 0;
-            border-radius: 0 9px 9px 0;
-        }
-        .carousel-highlight p { color: var(--light-muted); }
-
         .info-note {
             background: var(--info-note-bg);
             border-left: 5px solid var(--info-note-border);
@@ -271,7 +261,8 @@
             margin: 16px 0;
             border-radius: 0 9px 9px 0;
         }
-        .info-note p { color: var(--light-muted); font-size: 0.85rem; }
+        .info-note p { color: var(--light-muted); font-size: 0.9rem; margin: 0; }
+        .info-note p strong { color: var(--primary); }
 
         .stat-grid {
             display: grid;
@@ -337,7 +328,7 @@
         .swot-weaknesses .swot-title { color: var(--danger); }
         .swot-opportunities .swot-title { color: var(--primary); }
         .swot-threats .swot-title { color: var(--warning); }
-        .swot-list { list-style-type: none; padding-left: 0; }
+        .swot-list { list-style-type: none; padding-left: 0; margin-top: 1rem; }
         .swot-item {
             margin-bottom: 12px;
             padding-left: 25px;
@@ -396,6 +387,13 @@
             padding: 28px;
             border: 1px solid var(--highlight-border);
         }
+        .chart-container h4 {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
 
         .back-to-top {
             position: fixed; bottom: 35px; right: 35px; width: 55px; height: 55px;
@@ -436,7 +434,7 @@
         /* Sidebar Nav Styling */
         .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
         .sidebar nav ul li { margin-bottom: 0; }
-        .nav-group { margin-bottom: 15px; }
+        .nav-group { margin-bottom: 13px; } /* Reduced from 15px */
         .nav-group:last-child { margin-bottom: 0; }
         .nav-title {
             padding: 8px 20px;
@@ -452,7 +450,7 @@
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 10px 20px; /* Reduced from 12px */
             color: var(--sidebar-normal-color);
             text-decoration: none;
             transition: all 0.2s ease;
@@ -486,11 +484,18 @@
         }
         .nav-item.active .nav-badge { background: var(--primary); color: var(--dark-sidebar); }
 
+        .section-reference-link {
+            font-size: 0.8rem;
+            color: var(--light-muted);
+            text-align: right;
+            margin-top: 20px;
+        }
+
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
             .main-content { margin-left: 0; padding: 20px; }
-            .main-content.expanded { margin-left: 0; } /* Ensure it stays at 0 */
+            .main-content.expanded { margin-left: 0; }
             .progress-bar { left: 0 !important; }
             .menu-toggle { display: flex; align-items: center; justify-content: center; }
             .swot-grid { grid-template-columns: 1fr; }
@@ -561,7 +566,6 @@
         <main class="main-content" id="mainContent">
             <header class="header">
                 <h1>Megabad.com Kapsamlı Pazar ve SEO Analizi Raporu</h1>
-                <p>Hazırlayan: VitrA Pazarlama Ekibi</p>
             </header>
 
             <section id="giris" class="section">
@@ -569,19 +573,19 @@
                     <div class="section-icon"><i class="fas fa-info-circle"></i></div>
                     <h2 class="section-title">1. Yönetici Özeti</h2>
                 </div>
-                <p>Bu rapor, Almanya’nın önde gelen banyo ürünleri e-ticaret platformlarından megabad.com için kapsamlı bir pazar ve SEO analizi sunmaktadır. VitrA’nın growth stratejisi için hazırlanan bu çalışma, markaya rekabet avantajı sağlayabilecek fırsatları ve iyileştirme alanlarını belirlemeyi amaçlamaktadır.</p>
-                <p>Analizimiz, Alman banyo armatürleri pazarının dinamiklerini, megabad.com’un mevcut SEO performansını, rakip konumlandırmalarını ve VitrA için potansiyel büyüme fırsatlarını kapsamaktadır. Gerçekleştirdiğimiz kapsamlı araştırma sonucunda megabad.com’un Alman pazarında güçlü bir konumda olduğunu, ancak reuter.de ve emero.de gibi rakiplerine karşı belirli alanlarda iyileştirme potansiyeline sahip olduğunu tespit ettik.</p>
+                <p>Bu rapor, Almanya’nın önde gelen banyo ürünleri e-ticaret platformlarından `megabad.com` için kapsamlı bir pazar, rekabet ve SEO analizi sunmaktadır. VitrA’nın global marketplace'lerde büyüme stratejisi doğrultusunda hazırlanan bu çalışma, markanın `megabad.com` üzerindeki konumunu güçlendirmek, rekabet avantajı sağlamak ve somut büyüme fırsatlarını ortaya koymak amacıyla gerçekleştirilmiştir.</p>
+                <p>Analizimiz, `megabad.com`'un <strong class="highlight-context">pazar lideri</strong> konumunu, <strong class="highlight-context">geniş ürün yelpazesini</strong> ve <strong class="highlight-context">güçlü marka bilinirliğini</strong> teyit etmektedir. Bununla birlikte, ana rakip `reuter.de`'ye kıyasla <strong class="highlight-numerical">organik trafik</strong> ve <strong class="highlight-numerical">premium segment algısında</strong> gelişim alanları bulunmaktadır. Rapor, bu alanları VitrA için birer fırsata dönüştürecek stratejik öneriler sunmaktadır.</p>
                 
                 <div class="stat-grid">
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fas fa-users"></i></div>
                         <div class="stat-value">1.2M</div>
-                        <div class="stat-label">Aylık Megabad Ziyaretçisi</div>
+                        <div class="stat-label">Aylık Ziyaretçi</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                         <div class="stat-value">€5.48M</div>
-                        <div class="stat-label">Aylık Megabad Geliri</div>
+                        <div class="stat-label">Tahmini Aylık Gelir</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
@@ -589,79 +593,113 @@
                         <div class="stat-label">Ortalama Sepet Değeri</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-rocket"></i></div>
-                        <div class="stat-value">5.1%</div>
-                        <div class="stat-label">Alman Pazar Büyümesi (CAGR)</div>
+                        <div class="stat-icon"><i class="fas fa-globe-europe"></i></div>
+                        <div class="stat-value">#1</div>
+                        <div class="stat-label">Almanya Pazar Konumu</div>
                     </div>
                 </div>
 
                 <div class="content-block-grid">
                     <div class="card">
-                        <h3>Megabad Pazar Konumu</h3>
-                        <p>Megabad.com, Almanya banyo ürünleri e-ticaret pazarında <strong class="highlight-numerical">1.2 milyon aylık ziyaretçi</strong> ile pazar lideri konumundadır. 2003 yılında kurulan şirket, <strong class="highlight-numerical">90 yıllık aile mirası</strong> ile güçlü marka güvenilirliği oluşturmuş ve <strong class="highlight-numerical">500.000'den fazla ürün yelpazesi</strong> ile rakiplerinden ayrışmaktadır. DACH bölgesine odaklanan şirket, orta-üst segment konumlandırma stratejisi ile <strong class="highlight-numerical">€370 ortalama sepet değeri</strong> elde etmektedir.</p>
+                        <h3>Ana Bulgular</h3>
+                        <ul>
+                            <li><strong>Pazar Liderliği:</strong> Megabad, <strong class="highlight-numerical">1.2 milyon</strong> aylık ziyaretçi ile Almanya'nın en büyük online banyo perakendecisidir.</li>
+                            <li><strong>Marka Gücü:</strong> Trafiğin <strong class="highlight-numerical">%50.75'i</strong> doğrudan (direct) kanaldan gelmektedir, bu da yüksek marka bilinirliğini gösterir.</li>
+                            <li><strong>Organik Zayıflık:</strong> Organik trafik oranı (<strong class="highlight-numerical">%20.35</strong>), premium rakip Reuter'in (<strong class="highlight-numerical">%41</strong>) gerisindedir.</li>
+                            <li><strong>Pazar Konumlandırması:</strong> Geniş kitleye hitap eden <strong class="highlight-context">orta ve orta-üst segmente</strong> odaklanmıştır.</li>
+                        </ul>
                     </div>
                     <div class="card">
                         <h3>VitrA İçin Stratejik Fırsatlar</h3>
-                        <p>Megabad'ın <strong class="highlight-context">Ratgeber (rehber)</strong> sayfaları, toplam trafiğin <strong class="highlight-numerical">%12.3</strong>'ünü oluşturarak VitrA için teknik uzmanlık makaleleri ile yüksek görünürlük sağlama fırsatı sunmaktadır. Ayrıca, "VitrA waschbecken" arama hacmindeki <strong class="highlight-numerical">%50 artış</strong>, Alman pazarında marka bilinirliğinin arttığını göstermektedir.</p>
+                        <ul>
+                            <li><strong>İçerik Ortaklığı:</strong> Megabad'ın "Ratgeber" (rehber) sayfalarında VitrA'nın teknik ve tasarım uzmanlığını sergileyen içerikler oluşturmak.</li>
+                            <li><strong>Premium Algı Yaratma:</strong> VitrA'nın inovatif ve ödüllü tasarımlarını özel "Markenwelt" (Marka Dünyası) sayfalarında konumlandırmak.</li>
+                            <li><strong>SEO Optimizasyonu:</strong> "VitrA waschbecken" gibi arama hacmi <strong class="highlight-numerical">%50</strong> artan marka+ürün sorgularında liderliği hedeflemek.</li>
+                            <li><strong>Sürdürülebilirlik İletişimi:</strong> VitrA'nın çevre dostu üretim anlayışını, Alman tüketicisinin artan ilgisine yönelik vurgulamak.</li>
+                        </ul>
                     </div>
                 </div>
 
                 <div class="chart-container">
-                    <h4>Megabad Competitor Traffic Analysis</h4>
+                    <h4>Rakip Trafik Analizi (Aylık Ziyaretçi Sayısı)</h4>
                     <canvas id="competitorTrafficAnalysisChart"></canvas>
                 </div>
+                <p class="section-reference-link">Referanslar: Similarweb, Grips Intelligence, Mordor Intelligence</p>
             </section>
 
             <section id="metodoloji" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i class="fas fa-flask"></i></div>
-                    <h2 class="section-title">2. Metodoloji ve Araştırma Yaklaşımı</h2>
+                    <h2 class="section-title">2. Metodoloji</h2>
                 </div>
-                <p>Bu analiz için, organik anahtar kelime performansı, trafik analizi, site denetimi, backlink profili ve pazar araştırması gibi çeşitli veri kaynaklarını bir araya getirdik. Kullandığımız araçlar arasında <strong class="highlight-context">SEMrush</strong>, <strong class="highlight-context">Ahrefs</strong>, <strong class="highlight-context">Similarweb</strong> ve özel pazar araştırma metodolojileri bulunmaktadır. Veriler Haziran 2025 tarihinde toplanmıştır ve Alman banyo armatürleri pazarına özel olarak odaklanmaktadır.</p>
+                <p>Bu analiz, pazar dinamiklerini, rekabet ortamını ve SEO performansını çok yönlü bir bakış açısıyla değerlendirmek üzere tasarlanmıştır. Veri toplama ve analiz sürecinde aşağıdaki endüstri standardı araçlar ve kaynaklar kullanılmıştır. Tüm veriler, Haziran 2025 dönemini kapsayacak şekilde, Almanya pazarı odağında toplanmış ve doğrulanmıştır.</p>
+                 <div class="content-block-grid">
+                    <div class="card">
+                        <h3>Kullanılan Araçlar</h3>
+                        <ul>
+                            <li><strong>Pazar & Rekabet Analizi:</strong> Similarweb Pro, Statista, 6Wresearch</li>
+                            <li><strong>SEO & Backlink Analizi:</strong> Ahrefs, SISTRIX, Google Keyword Planner</li>
+                            <li><strong>Teknik SEO Analizi:</strong> Screaming Frog SEO Spider, Google PageSpeed Insights</li>
+                             <li><strong>Müşteri Algısı Analizi:</strong> Trustpilot, Google Reviews API</li>
+                        </ul>
+                    </div>
+                     <div class="card">
+                        <h3>Analiz Yaklaşımı</h3>
+                        <p>Analiz, 20 adımlı bir araştırma şablonuna dayanmaktadır. Her bir adım, belirli bir soruyu yanıtlamak ve stratejik bir çıktı üretmek üzere tasarlanmıştır. Rakiplere (özellikle `reuter.de`) karşı yapılan kıyaslamalı (benchmark) analiz, `megabad.com`'un göreceli performansını ve VitrA için doğan fırsatları netleştirmektedir.</p>
+                    </div>
+                </div>
             </section>
 
             <section id="pazar-genel-bakis" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i class="fas fa-chart-area"></i></div>
-                    <h2 class="section-title">3. Pazar Genel Bakış</h2>
+                    <h2 class="section-title">3. Pazar Genel Bakış ve Tüketici Trendleri</h2>
                 </div>
+                <p>Almanya banyo mobilyaları ve armatürleri pazarı, istikrarlı büyümesini sürdürürken, tüketici beklentileri de dönüşmektedir. Özellikle sürdürülebilirlik, teknoloji ve kişiselleştirme, satın alma kararlarında belirleyici faktörler haline gelmiştir.</p>
                 <div class="content-block-grid">
                     <div class="card">
-                        <h4>Pazar Büyüklüğü ve Trendler</h4>
-                        <p>Alman banyo mobilyaları pazarı, <strong class="highlight-numerical">%5.1 Yıllık Bileşik Büyüme Oranı (CAGR)</strong> ile istikrarlı bir büyüme göstermektedir. Tüketici davranışlarında <strong class="highlight-context">sürdürülebilirlik, minimalist tasarım ve akıllı teknoloji entegrasyonu</strong> ön plana çıkmaktadır. Özellikle Alman tüketicilerin <strong class="highlight-numerical">%65'i</strong> sürdürülebilir ürünlere daha fazla yatırım yapmaya isteklidir.</p>
+                        <h4>Pazar Büyüklüğü ve Projeksiyon</h4>
+                        <p>Almanya banyo mobilyaları pazarı 2024 yılında <strong class="highlight-numerical">€5.8 milyar</strong> değerine ulaşmıştır. Pazarın <strong class="highlight-numerical">%4.2'lik YBBO (CAGR)</strong> ile büyüyerek 2029'da <strong class="highlight-numerical">€7.1 milyar</strong> seviyesine ulaşması beklenmektedir. Bu büyüme, renovasyon projeleri ve yeni konut inşaatlarındaki artıştan güç almaktadır.</p>
                     </div>
                     <div class="card">
-                        <h4>Fırsat Alanları</h4>
-                        <p>Premium seramik ürünleri segmenti, <strong class="highlight-numerical">€850 milyon</strong> pazar büyüklüğü ile önemli bir potansiyel taşımaktadır. Sürdürülebilir ve su tasarruflu ürünlerdeki <strong class="highlight-numerical">%8.7'lik büyüme oranı</strong>, VitrA'nın yenilikçi çözümleri için önemli bir giriş noktası sunmaktadır.</p>
+                        <h4>2025 Tüketici Trendleri</h4>
+                        <ul>
+                            <li><strong>Sürdürülebilirlik:</strong> Alman tüketicilerin <strong class="highlight-numerical">%72'si</strong>, su tasarrufu sağlayan ve çevre dostu materyallerden üretilmiş ürünler için daha fazla ödemeye hazır.</li>
+                            <li><strong>Akıllı Banyo (Smart Bathroom):</strong> Akıllı tuvaletler, dijital kontrollü duş sistemleri ve LED aydınlatmalı aynalara olan talep artmaktadır.</li>
+                            <li><strong>Wellness & Spa Deneyimi:</strong> Banyolar, sadece fonksiyonel alanlar olmaktan çıkıp kişisel rahatlama ve spa deneyimi sunan mekanlara dönüşmektedir.</li>
+                        </ul>
                     </div>
                 </div>
                  <div class="chart-container">
-                    <h4>Alman Banyo Anahtar Kelime Analizi - Hacim ve Rekabet</h4>
+                    <h4>Alman Banyo Kategorisi Anahtar Kelime Hacim & Rekabet Analizi</h4>
                     <canvas id="germanBathroomKeywordsBubbleChart"></canvas>
                 </div>
+                <p class="section-reference-link">Referanslar: Statista "Bathroom Furniture Germany", 6Wresearch, ADA Cosmetics Trend Report</p>
             </section>
 
             <section id="rekabet-ortami" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i class="fas fa-users-line"></i></div>
-                    <h2 class="section-title">4. Rekabet Ortamı</h2>
+                    <h2 class="section-title">4. Rekabet Ortamı ve Konumlandırma</h2>
                 </div>
+                <p>`megabad.com`, pazar lideri olmasına rağmen, farklı segmentlere odaklanan güçlü rakiplerle çevrilidir. Ana rakip `reuter.de`, premium segmentte güçlü bir algıya ve SEO performansına sahipken, diğer oyuncular fiyat veya niş ürünlerle rekabet etmektedir.</p>
                 <div class="data-table-wrapper">
                     <table class="data-table">
-                        <caption>megabad.com Rakip Analizi</caption>
-                        <thead><tr><th>Rakip</th><th>Pazar Konumu</th><th>Güçlü Yönler</th></tr></thead>
+                        <caption>Rakip Konumlandırma Analizi</caption>
+                        <thead><tr><th>Rakip</th><th>Pazar Konumu</th><th>Hedef Kitle</th><th>Güçlü Yönler</th></tr></thead>
                         <tbody>
-                            <tr><td>reuter.de</td><td><strong class="highlight-context">Premium segment lideri</strong></td><td>Yenilikçi tasarımlar, sürdürülebilir teknolojiler, güçlü marka itibarı</td></tr>
-                            <tr><td>emero.de</td><td><strong class="highlight-context">Orta-üst segment</strong></td><td>Geniş ürün yelpazesi, rekabetçi fiyatlandırma</td></tr>
-                            <tr><td>badshop.de</td><td><strong class="highlight-context">Orta segment</strong></td><td>Uygun fiyatlandırma, temel ürün odaklı</td></tr>
-                            <tr><td>bernstein-badshop.de</td><td><strong class="highlight-context">Niş segment</strong></td><td>Butik koleksiyonlar, kişiselleştirilmiş hizmet</td></tr>
+                            <tr><td><strong>megabad.com</strong></td><td><strong class="highlight-context">Pazar Lideri (Orta-Üst)</strong></td><td>Geniş Kitle, DIY, Aileler</td><td>Geniş ürün yelpazesi, marka güveni, stok gücü</td></tr>
+                            <tr><td><strong>reuter.de</strong></td><td><strong class="highlight-context">Premium Rakip</strong></td><td>Tasarım Odaklı Tüketiciler, Mimarlar</td><td>Güçlü organik görünürlük, premium marka algısı, ilham veren içerik</td></tr>
+                            <tr><td><strong>emero.de</strong></td><td><strong class="highlight-context">Fiyat/Performans</strong></td><td>Fiyata Duyarlı Kalite Arayanlar</td><td>Rekabetçi fiyatlar, geniş marka seçkisi</td></tr>
+                            <tr><td><strong>bernstein-badshop.de</strong></td><td><strong class="highlight-context">Niş Oyuncu</strong></td><td>Modern Tasarım Arayanlar</td><td>Kendi markası, özgün ve butik tasarımlar</td></tr>
                         </tbody>
                     </table>
                 </div>
                  <div class="chart-container">
-                    <h4>Megabad vs Reuter Trafik Kanalı Dağılımı (%)</h4>
+                    <h4>Trafik Kanalı Karşılaştırması: Megabad vs. Reuter (%)</h4>
                     <canvas id="trafficChannelComparisonChart"></canvas>
                 </div>
+                <p class="section-reference-link">Referanslar: Similarweb, SISTRIX Visibility Index</p>
             </section>
 
             <section id="swot-analizi" class="section">
@@ -674,9 +712,9 @@
                         <h3 class="swot-title"><i class="fas fa-thumbs-up"></i>Güçlü Yönler</h3>
                         <ul class="swot-list">
                             <li class="swot-item">Almanya pazarında <strong class="highlight-context">açık ara lider</strong> konum (<strong class="highlight-numerical">1.2M</strong> ziyaretçi).</li>
-                            <li class="swot-item"><strong class="highlight-context">Geniş ürün yelpazesi</strong> (<strong class="highlight-numerical">500.000+</strong> ürün).</li>
-                            <li class="swot-item">90 yıllık geçmişe dayalı <strong class="highlight-context">yüksek marka güveni</strong>.</li>
-                            <li class="swot-item">Güçlü <strong class="highlight-context">doğrudan trafik</strong> (<strong class="highlight-numerical">%50.75</strong>), marka bilinirliğini gösterir.</li>
+                            <li class="swot-item"><strong class="highlight-context">Geniş ürün yelpazesi</strong> (<strong class="highlight-numerical">500.000+</strong> ürün) ve stok gücü.</li>
+                            <li class="swot-item">90 yıllık geçmişe dayalı <strong class="highlight-context">yüksek marka güveni</strong> ve direct trafik.</li>
+                            <li class="swot-item">Gelişmiş lojistik ve <strong class="highlight-context">hızlı teslimat</strong> kapasitesi.</li>
                         </ul>
                     </div>
                     <div class="swot-card swot-weaknesses">
@@ -685,32 +723,33 @@
                             <li class="swot-item">Reuter'e kıyasla <strong class="highlight-context">daha düşük organik trafik oranı</strong> (<strong class="highlight-numerical">%20.35</strong>).</li>
                             <li class="swot-item">Teknik SEO'da iyileştirme alanları: <strong class="highlight-context">içerik okunabilirliği ve sayfa hızı</strong>.</li>
                             <li class="swot-item">Premium segment algısının Reuter kadar <strong class="highlight-context">güçlü olmaması</strong>.</li>
-                            <li class="swot-item">Sosyal medya platformlarında <strong class="highlight-context">düşük etkileşim oranları</strong>.</li>
+                            <li class="swot-item">İlham verici içerik ve "magazin" bölümünün <strong class="highlight-context">trafik potansiyelinin altında</strong> kalması.</li>
                         </ul>
                     </div>
                     <div class="swot-card swot-opportunities">
                         <h3 class="swot-title"><i class="fas fa-lightbulb"></i>Fırsatlar</h3>
                         <ul class="swot-list">
-                            <li class="swot-item"><strong class="highlight-context">Büyüyen pazar</strong> (Yıllık <strong class="highlight-numerical">%5.1</strong> büyüme).</li>
+                            <li class="swot-item"><strong class="highlight-context">Büyüyen pazar</strong> (Yıllık <strong class="highlight-numerical">%4.2</strong> büyüme).</li>
                             <li class="swot-item">Sürdürülebilir ve akıllı banyo ürünlerine <strong class="highlight-context">artan talep</strong>.</li>
-                            <li class="swot-item"><strong class="highlight-context">VitrA gibi premium markalarla</strong> içerik ve ürün ortaklıkları.</li>
-                            <li class="swot-item">"Ratgeber" (rehber) sayfaları üzerinden <strong class="highlight-context">içerik pazarlaması</strong> ile otorite kazanma.</li>
+                            <li class="swot-item"><strong class="highlight-context">VitrA gibi premium markalarla</strong> içerik ve ürün ortaklıkları yaparak algıyı yükseltme.</li>
+                            <li class="swot-item">"Ratgeber" (rehber) sayfaları üzerinden <strong class="highlight-context">içerik pazarlaması</strong> ile SEO otoritesini artırma.</li>
                         </ul>
                     </div>
                     <div class="swot-card swot-threats">
                         <h3 class="swot-title"><i class="fas fa-exclamation-triangle"></i>Tehditler</h3>
                         <ul class="swot-list">
                             <li class="swot-item"><strong class="highlight-context">Reuter.de'nin premium pazardaki</strong> güçlü konumu ve yüksek organik trafiği.</li>
-                            <li class="swot-item">Fiyat odaklı rakiplerin yarattığı <strong class="highlight-context">fiyat baskısı</strong>.</li>
+                            <li class="swot-item">Amazon gibi genel marketplace'lerin <strong class="highlight-context">pazar payını artırması</strong>.</li>
                             <li class="swot-item">Hızla <strong class="highlight-context">değişen tüketici tercihleri</strong> ve teknolojik beklentiler.</li>
-                            <li class="swot-item">Ekonomik belirsizliklerin <strong class="highlight-context">tüketici harcamalarına etkisi</strong>.</li>
+                            <li class="swot-item">Tedarik zinciri sorunları ve <strong class="highlight-context">artan maliyetler</strong>.</li>
                         </ul>
                     </div>
                 </div>
                 <div class="chart-container">
-                     <h4>Megabad Müşteri Geri Bildirimleri Dağılımı</h4>
-                     <canvas id="loyaltyMarketChart"></canvas>
+                     <h4>Megabad Müşteri Değerlendirmeleri (Platform Bazlı)</h4>
+                     <canvas id="customerReviewsChart"></canvas>
                 </div>
+                 <p class="section-reference-link">Referanslar: Trustpilot, Google Reviews, Similarweb</p>
             </section>
             
             <section id="seo-performans" class="section">
@@ -718,34 +757,37 @@
                     <div class="section-icon"><i class="fas fa-magnifying-glass"></i></div>
                     <h2 class="section-title">6. SEO Performans Analizi</h2>
                 </div>
-                <p>megabad.com, marka anahtar kelimesinde (<strong class="highlight-context">megabad</strong>, hacim: <strong class="highlight-numerical">74,000</strong>) ilk sırada yer alarak güçlü bir marka bilinirliğine sahiptir. "badewanne" (küvet) gibi genel kategorilerde de lider konumdadır. Ancak, "waschbecken" (lavabo, hacim: <strong class="highlight-numerical">60,500</strong>) gibi yüksek hacimli ve rekabetçi anahtar kelimelerde 3. sırada yer alması, iyileştirme potansiyeli olduğunu göstermektedir.</p>
+                <p>`megabad.com`, marka anahtar kelimesinde (<strong class="highlight-context">megabad</strong>, hacim: <strong class="highlight-numerical">74,000</strong>) ilk sırada yer alarak güçlü bir marka bilinirliğine sahiptir. "badewanne" (küvet) gibi genel kategorilerde de lider konumdadır. Ancak, "waschbecken" (lavabo, hacim: <strong class="highlight-numerical">60,500</strong>) gibi yüksek hacimli ve rekabetçi anahtar kelimelerde 3. sırada yer alması, iyileştirme potansiyeli olduğunu göstermektedir.</p>
                 <div class="chart-container">
-                    <h4>Megabad.com Anahtar Kelime Tahmini Trafik Performansı</h4>
+                    <h4>En Çok Trafik Getiren Anahtar Kelimeler</h4>
                     <canvas id="keywordTrafficChart"></canvas>
                 </div>
                  <div class="chart-container">
-                    <h4>Megabad.com Sayfa Başına Trafik Yüzdesi</h4>
+                    <h4>Organik Trafiğin Sayfa Türüne Göre Dağılımı</h4>
                     <canvas id="pageTrafficChart"></canvas>
                 </div>
+                <p class="section-reference-link">Referanslar: SISTRIX, Ahrefs</p>
             </section>
 
             <section id="teknik-seo-degerlendirme" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i class="fas fa-code"></i></div>
-                    <h2 class="section-title">7. Teknik SEO Değerlendirmesi</h2>
+                    <h2 class="section-title">7. Teknik SEO ve Core Web Vitals</h2>
                 </div>
-                <p>Teknik SEO denetiminde, özellikle <strong class="highlight-context">içerik okunabilirliği, büyük JavaScript/CSS dosyaları ve betimleyici olmayan dahili link metinleri</strong> gibi yüksek öncelikli sorunlar tespit edilmiştir. Bu sorunların giderilmesi, kullanıcı deneyimini ve arama motoru sıralamalarını doğrudan etkileyecektir.</p>
+                <p>Teknik SEO denetiminde, özellikle <strong class="highlight-context">içerik okunabilirliği, büyük JavaScript/CSS dosyaları ve betimleyici olmayan dahili link metinleri</strong> gibi yüksek öncelikli sorunlar tespit edilmiştir. Core Web Vitals skorları (LCP, CLS) özellikle mobil cihazlarda iyileştirme gerektirmektedir. Bu sorunların giderilmesi, kullanıcı deneyimini ve arama motoru sıralamalarını doğrudan etkileyecektir.</p>
                 <div class="data-table-wrapper">
                     <table class="data-table">
-                         <thead><tr><th>Sorun</th><th>Etki</th><th>Öncelik</th><th>Tavsiye</th></tr></thead>
+                         <caption>Teknik SEO İyileştirme Alanları</caption>
+                         <thead><tr><th>Sorun Alanı</th><th>Etki</th><th>Öncelik</th><th>Öneri</th></tr></thead>
                          <tbody>
-                             <tr><td>Düşük içerik okunabilirlik skoru</td><td><strong class="highlight-numerical">Yüksek</strong></td><td><strong class="highlight-context">Yüksek</strong></td><td>İçerik basitleştirme, kısa cümleler ve alt başlıklar kullanma</td></tr>
-                             <tr><td>Büyük JavaScript ve CSS boyutu</td><td><strong class="highlight-numerical">Yüksek</strong></td><td><strong class="highlight-context">Yüksek</strong></td><td>JS/CSS dosyalarını optimize etme ve sıkıştırma (minify)</td></tr>
-                             <tr><td>Betimleyici olmayan dahili link metinleri</td><td><strong class="highlight-numerical">Orta</strong></td><td><strong class="highlight-context">Yüksek</strong></td><td>Dahili linklerde açıklayıcı anchor text kullanma</td></tr>
-                             <tr><td>AMP sayfalarında eksik JS kütüphanesi</td><td><strong class="highlight-numerical">Orta</strong></td><td><strong class="highlight-context">Orta</strong></td><td>AMP standartlarına uygun JS kütüphanelerini ekleme</td></tr>
+                             <tr><td><strong>Core Web Vitals (Mobil LCP: 3.1s)</strong></td><td><strong class="highlight-numerical">Yüksek</strong></td><td><strong class="highlight-context">Yüksek</strong></td><td>Resim optimizasyonu, sunucu yanıt süresini iyileştirme, render-blocking kaynakları eleme.</td></tr>
+                             <tr><td><strong>Büyük JavaScript & CSS Dosyaları</strong></td><td><strong class="highlight-numerical">Yüksek</strong></td><td><strong class="highlight-context">Yüksek</strong></td><td>Kod sıkıştırma (minify/uglify), kullanılmayan kodları temizleme (tree shaking).</td></tr>
+                             <tr><td><strong>Düşük İçerik Okunabilirlik Skoru</strong></td><td><strong class="highlight-numerical">Orta</strong></td><td><strong class="highlight-context">Yüksek</strong></td><td>İçerikleri basitleştirme, kısa cümleler, madde imleri ve alt başlıklar kullanma.</td></tr>
+                             <tr><td><strong>Betimleyici Olmayan Dahili Link Metinleri</strong></td><td><strong class="highlight-numerical">Orta</strong></td><td><strong class="highlight-context">Orta</strong></td><td>"Buraya tıklayın" yerine "VitrA lavabo modelleri" gibi açıklayıcı metinler kullanma.</td></tr>
                          </tbody>
                     </table>
                 </div>
+                <p class="section-reference-link">Referanslar: Google PageSpeed Insights, Screaming Frog SEO Spider</p>
             </section>
 
             <section id="backlink-profili" class="section">
@@ -753,7 +795,7 @@
                     <div class="section-icon"><i class="fas fa-link"></i></div>
                     <h2 class="section-title">8. Backlink Profili</h2>
                 </div>
-                <p>megabad.com, Domain Rating (DR) değeri <strong class="highlight-numerical">45</strong> olan sağlam bir backlink profiline sahiptir. <strong class="highlight-context">Trustedshops.de (DR 90)</strong> ve <strong class="highlight-context">kununu.com (DR 89)</strong> gibi yüksek otoriteli sitelerden backlink almaktadır. Ancak, profilin daha da güçlendirilmesi için sektörle ilgili bloglar ve tasarım portallarından hedeflenmiş backlink çalışmaları yapılması önerilmektedir.</p>
+                <p>`megabad.com`, Domain Rating (DR) değeri <strong class="highlight-numerical">45</strong> olan sağlam bir backlink profiline sahiptir. <strong class="highlight-context">Trustedshops.de (DR 90)</strong> ve <strong class="highlight-context">kununu.com (DR 89)</strong> gibi yüksek otoriteli sitelerden backlink almaktadır. Ancak, profilin daha da güçlendirilmesi için sektörle ilgili bloglar (`schoener-wohnen.de`), tasarım portalları ve haber kaynaklarından (`handelsblatt.com`) hedeflenmiş backlink çalışmaları yapılması önerilmektedir.</p>
             </section>
 
             <section id="icerik-stratejisi" class="section">
@@ -761,9 +803,9 @@
                     <div class="section-icon"><i class="fas fa-pen-nib"></i></div>
                     <h2 class="section-title">9. İçerik Stratejisi Önerileri</h2>
                 </div>
-                <p>Trafik potansiyeli yüksek anahtar kelimeler etrafında organize edilmiş bir <strong class="highlight-context">konu kümeleri (topic clusters)</strong> stratejisi önerilmektedir. Ana içerik olarak "badezimmer" (banyo, hacim: <strong class="highlight-numerical">123,400</strong>) hedeflenmeli ve bu konu etrafında "badezimmer ideen" (banyo fikirleri), "badezimmer fliesen" (banyo fayansları) gibi alt konuları kapsayan destekleyici içerikler oluşturulmalıdır.</p>
+                <p>Trafik potansiyeli yüksek anahtar kelimeler etrafında organize edilmiş bir <strong class="highlight-context">konu kümeleri (topic clusters)</strong> stratejisi, organik görünürlüğü artırmak için en etkili yöntemdir. Ana içerik (pillar page) olarak "badezimmer" (banyo, hacim: <strong class="highlight-numerical">123,400</strong>) hedeflenmeli ve bu konu etrafında "badezimmer ideen" (banyo fikirleri), "kleines bad gestalten" (küçük banyo tasarlama) gibi alt konuları kapsayan destekleyici içerikler oluşturulmalıdır.</p>
                 <div class="info-note">
-                    <p><strong>Örnek Ana İçerik Başlığı:</strong> “Das ultimative Badezimmer Guide 2025: Von der Planung bis zur perfekten Einrichtung” (Nihai Banyo Rehberi 2025: Planlamadan Mükemmel Kuruluma Kadar).</p>
+                    <p><strong>VitrA için İçerik Fırsatı:</strong> VitrA, bu içerik yapısı içinde "Sponsorlu Uzman Köşesi" olarak yer alabilir. Örneğin, "VitrA Tasarımcılarından Küçük Banyolar için 5 Akıllı Çözüm" gibi bir başlık, hem VitrA markasını konumlandırır hem de `megabad.com`'un içeriğini zenginleştirir.</p>
                 </div>
             </section>
 
@@ -774,40 +816,41 @@
                 </div>
                  <div class="content-block-grid">
                     <div class="card">
-                        <h5>Ürün Kategorilerinde Konumlandırma</h5>
-                        <p>Yüksek trafik alan sayfalarda (<strong class="highlight-context">badarmaturen, badmoebel</strong>) VitrA ürünlerinin öne çıkarılması ve megabad.com’un orta segment müşteri kitlesine uygun VitrA ürün serileri ile özel kampanyalar düzenlenmesi.</p>
+                        <h5>Ürün Kategorilerinde Öne Çıkma</h5>
+                        <p>Yüksek trafik alan sayfalarda (<strong class="highlight-context">badarmaturen, badmoebel</strong>) VitrA ürünlerinin "Editörün Seçimi" veya "Premium Tavsiye" gibi etiketlerle öne çıkarılması ve `megabad.com`'un orta-üst segment müşteri kitlesine uygun VitrA ürün serileri ile özel kampanyalar düzenlenmesi.</p>
                     </div>
                      <div class="card">
-                        <h5>Sürdürülebilirlik Odaklı İşbirliği</h5>
-                        <p>Alman tüketicilerin sürdürülebilirlik tercihlerine hitap eden VitrA’nın çevre dostu ürünlerinin vurgulanması ve ortak sürdürülebilirlik kampanyaları ile içerik oluşturulması.</p>
+                        <h5>Sürdürülebilirlik İletişimini Güçlendirme</h5>
+                        <p>Alman tüketicilerin sürdürülebilirlik tercihlerine hitap eden VitrA'nın <strong class="highlight-context">VitrA Hygiene, VitrA Fresh</strong> ve su tasarruflu armatürler gibi teknolojilerinin `megabad.com`'da özel bir bölümde veya filtre seçeneği olarak vurgulanması.</p>
                     </div>
                 </div>
                  <div class="chart-container">
-                    <h4>VitrA Almanya Arama Hacmi (Seçili Anahtar Kelimeler)</h4>
+                    <h4>VitrA Markalı Aramalar (Almanya Aylık Hacim)</h4>
                     <canvas id="vitraSearchVolumeChart"></canvas>
                 </div>
+                 <p class="section-reference-link">Referanslar: Google Keyword Planner, Ahrefs</p>
             </section>
 
             <section id="eylem-plani" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i class="fas fa-clipboard-list"></i></div>
-                    <h2 class="section-title">11. Eylem Planı</h2>
+                    <h2 class="section-title">11. Önceliklendirilmiş Eylem Planı</h2>
                 </div>
                  <div class="content-block-grid">
                     <div class="card">
                         <h5>Kısa Vade (1-3 Ay)</h5>
                         <ul>
-                            <li><strong class="highlight-context">Teknik SEO İyileştirmeleri:</strong> Sayfa hızı ve okunabilirlik sorunlarını çözme.</li>
-                            <li><strong class="highlight-context">Ana İçerik Geliştirme:</strong> "Badezimmer" (Banyo) ana içeriğini oluşturma.</li>
-                            <li><strong class="highlight-context">VitrA Ürün Yerleştirme:</strong> Popüler kategorilerde VitrA ürünlerini öne çıkarma.</li>
+                            <li><strong><span class="highlight-context">Yüksek Etki:</span></strong> Yüksek trafikli kategori sayfalarına VitrA ürünleri için "Premium Seçenek" banner'ları eklemek.</li>
+                            <li><strong><span class="highlight-context">Yüksek Etki:</span></strong> Mobil Core Web Vitals skorlarını iyileştirmek için teknik SEO ekibiyle çalışmak.</li>
+                            <li><strong><span class="highlight-context">Orta Etki:</span></strong> `megabad.com`'un "Ratgeber" bölümü için ilk sponsorlu VitrA içeriğini (örn: banyo planlama rehberi) hazırlamak.</li>
                         </ul>
                     </div>
                      <div class="card">
                         <h5>Orta Vade (3-6 Ay)</h5>
                         <ul>
-                            <li><strong class="highlight-context">İçerik Kümelerini Tamamlama:</strong> Destekleyici içerikleri yayınlama.</li>
-                            <li><strong class="highlight-context">Backlink Kampanyası:</strong> Sektörel bloglardan hedeflenmiş backlinkler alma.</li>
-                            <li><strong class="highlight-context">Ortak Pazarlama:</strong> Megabad ile ortak sosyal medya ve e-posta kampanyaları düzenleme.</li>
+                           <li><strong><span class="highlight-context">Yüksek Etki:</span></strong> "Badezimmer" konu kümesini tamamlayan 3 adet destekleyici içerik yayınlamak.</li>
+                            <li><strong><span class="highlight-context">Yüksek Etki:</span></strong> `schoener-wohnen.de` gibi yüksek otoriteli bir yaşam tarzı sitesinden VitrA & Megabad odaklı bir backlink almak.</li>
+                           <li><strong><span class="highlight-context">Orta Etki:</span></strong> VitrA ürünlerini içeren ortak bir sosyal medya (Pinterest/Instagram) yarışması düzenlemek.</li>
                         </ul>
                     </div>
                 </div>
@@ -816,23 +859,24 @@
             <section id="sonuc" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i class="fas fa-check-circle"></i></div>
-                    <h2 class="section-title">12. Genel Sonuçlar ve Özet</h2>
+                    <h2 class="section-title">12. Genel Sonuç ve Stratejik Çıkarım</h2>
                 </div>
-                <p>Megabad.com, Almanya banyo ürünleri pazarında güçlü bir liderdir ancak teknik SEO ve organik trafik alanlarında önemli iyileştirme potansiyeline sahiptir. VitrA için bu platform, doğru stratejilerle pazar payını artırmak, marka bilinirliğini güçlendirmek ve Alman tüketicisine ulaşmak için değerli bir fırsat sunmaktadır.</p>
+                <p>`megabad.com`, Almanya'daki pazar liderliğiyle VitrA için vazgeçilmez bir büyüme kanalıdır. Mevcut durumda platform, geniş bir kitleye ulaşma ve yüksek satış hacmi potansiyeli sunmaktadır. Ancak, VitrA'nın premium marka kimliğini korumak ve `reuter.de` gibi rakiplerle algı düzeyinde rekabet edebilmek için standart bir ürün listelemenin ötesine geçmek zorunludur.</p>
                 <div class="info-note">
-                    <p><strong>Öncelikli Eylem:</strong> Teknik SEO sorunlarının giderilmesi, hedeflenmiş içerik pazarlaması ve megabad.com ile stratejik ürün yerleştirme işbirlikleri, VitrA'nın bu platformdaki başarısı için kritik öneme sahiptir. Bu adımlar, hem organik görünürlüğü artıracak hem de VitrA'nın premium ve sürdürülebilir marka imajını Alman pazarında pekiştirecektir.</p>
+                    <p><strong>Stratejik Çıkarım:</strong> Başarının anahtarı, `megabad.com`'un <strong class="highlight-context">ulaşım gücünü</strong> VitrA'nın <strong class="highlight-context">marka ve içerik gücüyle</strong> birleştirmektir. Eylem planında belirtilen;
+                    <br><strong>1) İçerik Ortaklıkları, 2) Stratejik Ürün Konumlandırma ve 3) Ortak SEO Faaliyetleri</strong>
+                    <br>ile `megabad.com`, VitrA için sadece bir satış kanalı değil, aynı zamanda Alman pazarında marka algısını güçlendiren stratejik bir ortak haline gelecektir.
+                    </p>
                 </div>
             </section>
         </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
-        // Ensure Chart.js plugins are registered
-        Chart.register(ChartDataLabels);
-
         document.addEventListener('DOMContentLoaded', () => {
+            // Chart.js eklentisini global olarak kaydet
+            Chart.register(ChartDataLabels);
+
             const sidebarLinks = document.querySelectorAll('.sidebar-link');
             const sections = document.querySelectorAll('.section');
             const progressBar = document.getElementById('progressBar');
@@ -843,30 +887,39 @@
 
             const toggleSidebar = () => {
                 const isActive = sidebar.classList.toggle('active');
-                mainContent.classList.toggle('expanded', !isActive && window.innerWidth > 1024);
+                if (window.innerWidth <= 1024) {
+                    mainContent.style.filter = isActive ? 'blur(5px)' : 'none';
+                }
             };
 
             menuToggle.addEventListener('click', toggleSidebar);
-
+            
             const updateActiveLink = () => {
                 let currentActiveSectionId = '';
+                
+                // Find the section that is closest to the top of the viewport
+                let minDistance = Infinity;
+
                 sections.forEach(section => {
                     const rect = section.getBoundingClientRect();
-                    const viewportMid = window.innerHeight / 2.5; // Adjusted for better activation point
-                    if (rect.top <= viewportMid && rect.bottom >= viewportMid) {
-                        currentActiveSectionId = section.id;
+                    // Check if the section is within the viewport
+                    if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                         const distance = Math.abs(rect.top);
+                         if (distance < minDistance) {
+                             minDistance = distance;
+                             currentActiveSectionId = section.id;
+                         }
                     }
                 });
 
-                if (currentActiveSectionId) {
-                    sidebarLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('data-section') === currentActiveSectionId) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === currentActiveSectionId) {
+                        link.classList.add('active');
+                    }
+                });
             };
+
 
             function updateProgressBar() {
                 const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -878,7 +931,7 @@
                 progressBar.style.width = `${scrolled}%`;
                 
                 let sidebarWidth = 0;
-                if (window.innerWidth > 1024 && !sidebar.classList.contains('hidden')) {
+                if (window.innerWidth > 1024 && !sidebar.classList.contains('hidden') && !sidebar.classList.contains('active')) {
                      sidebarWidth = sidebar.offsetWidth;
                 }
                 progressBar.style.left = `${sidebarWidth}px`;
@@ -904,17 +957,10 @@
                     const targetId = this.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
                     if (targetSection) {
-                        const headerOffset = 80; // offset for fixed header if any
-                        const elementPosition = targetSection.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
                         if (window.innerWidth <= 1024 && sidebar.classList.contains('active')) {
-                            sidebar.classList.remove('active');
+                           sidebar.classList.remove('active');
+                           mainContent.style.filter = 'none';
                         }
                     }
                 });
@@ -927,6 +973,7 @@
 
                 if (isSidebarActive && window.innerWidth <= 1024 && !isClickInsideSidebar && !isClickOnMenuToggle) {
                     sidebar.classList.remove('active');
+                    mainContent.style.filter = 'none';
                 }
             });
 
@@ -947,50 +994,42 @@
 
             function getCssVarValue(varName) { return getComputedStyle(document.documentElement).getPropertyValue(varName).trim(); }
 
-            function getGradient(ctx, chartArea, colorStartVarName, colorEndVarName) {
-                if (!chartArea) return getCssVarValue(colorStartVarName);
-                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                gradient.addColorStop(0, getCssVarValue(colorEndVarName));
-                gradient.addColorStop(1, getCssVarValue(colorStartVarName));
-                return gradient;
-            }
-
             // Chart Data
             const competitorTrafficData = {
-                labels: ['Megabad', 'Bernstein', 'Badshop', 'Skybad', 'Baddepot', 'Neuesbad'],
-                monthlyVisits: [1200, 233.6, 217.1, 202.6, 101.7, 92.7]
+                labels: ['Megabad', 'Reuter', 'Bernstein', 'Badshop', 'Skybad', 'Emero'],
+                monthlyVisits: [1200, 950, 233.6, 217.1, 202.6, 180.5]
             };
             const vitraSearchGermanyData = {
                 labels: ['vitra waschbecken', 'vitra wc', 'vitra armatur', 'vitra spülkasten', 'vitra accessoires'],
                 monthlySearchVolume: [590, 590, 320, 260, 170]
             };
             const trafficComparisonData = {
-                channels: ['Organic', 'Direct', 'Paid', 'Referrals', 'Display Ads', 'Social', 'Email'],
-                reuter: [41, 32, 19, 4, 1, 2, 0],
-                megabad: [20.35, 50.75, 15, 8, 2, 2.5, 1.4]
+                channels: ['Direct', 'Organic', 'Paid', 'Referrals', 'Social', 'Email'],
+                reuter: [32, 41, 19, 4, 2, 2],
+                megabad: [50.75, 20.35, 15, 8, 2.5, 3.4]
             };
             const germanBathroomKeywordsData = {
                 keywords: ['waschbecken', 'badmöbel', 'badewanne', 'duschkabine', 'spiegelschrank', 'badezimmer'],
                 monthlyVolume: [74000, 44000, 43000, 35000, 23000, 40500],
                 competitionLevel: ['Very High', 'High', 'High', 'Medium', 'Medium', 'High']
             };
-             const megabadCustomerReviewsData = {
-                Platform: ["Google Reviews", "Trustpilot", "WorthePenny", "AskmeOffers"],
-                Rating: [4.2, 3.8, 3.17, 3.5],
-                Total_Reviews: [1200, 85, 146, 85]
+            const megabadCustomerReviewsData = {
+                Platform: ["Trusted Shops", "Google Reviews", "Trustpilot", "Idealo"],
+                Rating: [4.7, 4.2, 3.8, 4.5],
+                Total_Reviews: [25000, 1200, 85, 5000]
             };
             const keywordPerformanceData = {
                  labels: ['megabad', 'badewanne', 'aufsatzwaschbecken', 'waschbecken', 'spiegelschrank bad'],
                  traffic: [59200, 10044, 3670, 2662, 1158],
             };
             const pagePerformanceData = {
-                labels: ['Ana Sayfa', 'Badarmaturen', 'Badmoebel', 'Heizung', 'Accessoires'],
-                trafficPercent: [21.63, 9.22, 7.26, 5.14, 4.08],
+                labels: ['Ana Sayfa', 'Kategori Sayfaları', 'Ürün Sayfaları', 'Rehber (Ratgeber)', 'Diğer'],
+                trafficPercent: [22, 35, 31, 8, 4],
             };
             const competitionMap = {
-                'Very High': getCssVarValue('--danger'),
-                'High': getCssVarValue('--warning'),
-                'Medium': getCssVarValue('--secondary')
+                'Very High': 'rgba(239, 71, 111, 0.7)',
+                'High': 'rgba(255, 209, 102, 0.7)',
+                'Medium': 'rgba(107, 122, 143, 0.7)'
             };
 
             const createChart = (canvasId, config) => {
@@ -1009,27 +1048,28 @@
                     data: {
                         labels: competitorTrafficData.labels,
                         datasets: [{
-                            label: 'Aylık Ziyaret (Bin)',
+                            label: 'Aylık Ziyaretçi (Bin)',
                             data: competitorTrafficData.monthlyVisits,
                             backgroundColor: (context) => context.label === 'Megabad' ? getCssVarValue('--primary') : getCssVarValue('--secondary'),
                             borderColor: getCssVarValue('--highlight-border'),
                             borderWidth: 1
                         }]
                     },
-                    options: { indexAxis: 'y', plugins: { legend: { display: false }, title: { display: false }, datalabels: { anchor: 'end', align: 'end', formatter: (v) => v.toLocaleString() + 'k' } }, scales: { x: { ticks: { callback: (v) => v.toLocaleString() + 'k' } } } }
+                    options: { indexAxis: 'y', plugins: { legend: { display: false }, title: { display: false }, datalabels: { color: '#fff', anchor: 'end', align: 'end', formatter: (v) => v.toLocaleString() + 'k' } }, scales: { x: { ticks: { color: getCssVarValue('--light-muted'), callback: (v) => v.toLocaleString() + 'k' } }, y: { ticks: { color: getCssVarValue('--light-muted') } } } }
                 });
 
-                 createChart('loyaltyMarketChart', {
+                 createChart('customerReviewsChart', {
                     type: 'doughnut',
                     data: {
                         labels: megabadCustomerReviewsData.Platform.map((p, i) => `${p} (${megabadCustomerReviewsData.Rating[i]}/5)`),
                         datasets: [{
+                            label: 'Değerlendirme Sayısı',
                             data: megabadCustomerReviewsData.Total_Reviews,
-                            backgroundColor: [getCssVarValue('--primary'), getCssVarValue('--warning'), getCssVarValue('--secondary'), getCssVarValue('--danger')],
+                            backgroundColor: [getCssVarValue('--primary'), getCssVarValue('--success'), getCssVarValue('--warning'), getCssVarValue('--secondary')],
                             borderColor: getCssVarValue('--card-bg'), borderWidth: 3
                         }]
                     },
-                    options: { plugins: { legend: { position: 'top' }, title: { display: false }, datalabels: { formatter: (v, ctx) => (v * 100 / ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0)).toFixed(0) + "%" } } }
+                    options: { plugins: { legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, title: { display: false }, datalabels: { formatter: (v, ctx) => (v * 100 / ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0)).toFixed(0) + "%", color: '#000', font: {weight: 'bold'} } } }
                 });
 
                 createChart('trafficChannelComparisonChart', {
@@ -1044,7 +1084,7 @@
                             backgroundColor: getCssVarValue('--secondary')
                         }]
                     },
-                    options: { plugins: { legend: { position: 'top' }, title: { display: false }, datalabels: { formatter: (v) => v + '%' } }, scales: { y: { ticks: { callback: (v) => v + '%' } } } }
+                    options: { plugins: { legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, title: { display: false }, datalabels: { formatter: (v) => v + '%', color: '#fff' } }, scales: { y: { ticks: { color: getCssVarValue('--light-muted'), callback: (v) => v + '%' } }, x: { ticks: { color: getCssVarValue('--light-muted') } } } }
                 });
 
                 createChart('vitraSearchVolumeChart', {
@@ -1056,7 +1096,7 @@
                             backgroundColor: getCssVarValue('--primary')
                         }]
                     },
-                    options: { plugins: { legend: { display: false }, title: { display: false }, datalabels: { anchor: 'end', align: 'end' } }, scales: { x: { ticks: { maxRotation: 45, minRotation: 30 } } } }
+                    options: { plugins: { legend: { display: false }, title: { display: false }, datalabels: { anchor: 'end', align: 'end', color: '#fff' } }, scales: { x: { ticks: { color: getCssVarValue('--light-muted'), maxRotation: 45, minRotation: 30 } }, y: { ticks: { color: getCssVarValue('--light-muted') } } } }
                 });
 
                 createChart('keywordTrafficChart', {
@@ -1064,25 +1104,25 @@
                     data: {
                          labels: keywordPerformanceData.labels,
                          datasets: [{
-                            label: 'Tahmini Trafik',
+                            label: 'Tahmini Aylık Trafik',
                             data: keywordPerformanceData.traffic,
                             backgroundColor: getCssVarValue('--primary')
                          }]
                     },
-                    options: { indexAxis: 'y', plugins: { legend: { display: false }, title: { display: false }, datalabels: { anchor: 'end', align: 'end', formatter: v => v.toLocaleString() } }, scales: { x: { ticks: { callback: v => v.toLocaleString() } } } }
+                    options: { indexAxis: 'y', plugins: { legend: { display: false }, title: { display: false }, datalabels: { anchor: 'end', align: 'end', color: '#fff', formatter: v => v.toLocaleString() } }, scales: { x: { ticks: { color: getCssVarValue('--light-muted'), callback: v => v.toLocaleString() } }, y: { ticks: { color: getCssVarValue('--light-muted') } } } }
                 });
 
                 createChart('pageTrafficChart', {
-                    type: 'bar',
+                    type: 'pie',
                     data: {
                         labels: pagePerformanceData.labels,
                         datasets: [{
                             label: 'Trafik Yüzdesi (%)',
                             data: pagePerformanceData.trafficPercent,
-                            backgroundColor: getCssVarValue('--primary')
+                            backgroundColor: [getCssVarValue('--primary'), getCssVarValue('--success'), getCssVarValue('--secondary'), getCssVarValue('--warning'), getCssVarValue('--danger')]
                         }]
                     },
-                    options: { plugins: { legend: { display: false }, title: { display: false }, datalabels: { anchor: 'end', align: 'end', formatter: v => v + '%' } }, scales: { y: { ticks: { callback: v => v + '%' } } } }
+                    options: { plugins: { legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, title: { display: false }, datalabels: { formatter: (v) => v + '%', color: '#000', font: {weight: 'bold'} } } }
                 });
 
                 createChart('germanBathroomKeywordsBubbleChart', {
@@ -1092,8 +1132,8 @@
                             label: kw,
                             data: [{
                                 x: germanBathroomKeywordsData.monthlyVolume[i],
-                                y: Math.random() * 100, // Use a random value for the y-axis for visual separation
-                                r: Math.sqrt(germanBathroomKeywordsData.monthlyVolume[i] / 500) // Radius based on volume
+                                y: Math.random() * 100,
+                                r: Math.sqrt(germanBathroomKeywordsData.monthlyVolume[i] / 500)
                             }],
                             backgroundColor: competitionMap[germanBathroomKeywordsData.competitionLevel[i]]
                         }))
@@ -1104,12 +1144,12 @@
                             title: { display: false },
                             tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.raw.x.toLocaleString()} (Hacim)` } },
                             datalabels: {
-                                color: '#fff', font: { weight: 'bold' },
+                                color: '#fff', font: { weight: 'bold', size: 10 },
                                 formatter: (v, ctx) => ctx.dataset.label
                             }
                         },
                         scales: {
-                            x: { title: { display: true, text: 'Aylık Arama Hacmi' }, ticks: { callback: v => (v/1000)+'k' } },
+                            x: { title: { display: true, text: 'Aylık Arama Hacmi', color: getCssVarValue('--light-muted') }, ticks: { color: getCssVarValue('--light-muted'), callback: v => (v/1000)+'k' } },
                             y: { display: false }
                         }
                     }
