@@ -79,14 +79,11 @@
             background-color: var(--dark);
             color: var(--text-color);
             line-height: 1.6;
-            display: flex; /* Added to center main content area on large screens */
-            justify-content: center;
         }
 
         .container {
             display: flex;
-            width: 100%;
-            max-width: 1800px; /* Optional: Max width for the entire layout */
+            min-height: 100vh;
         }
 
         .sidebar {
@@ -122,7 +119,7 @@
 
         .main-content {
             flex-grow: 1;
-            margin-left: var(--sidebar-width); /* Space for the sidebar */
+            margin-left: var(--sidebar-width);
             padding: 40px;
             transition: margin-left 0.3s ease-in-out;
             position: relative;
@@ -294,15 +291,14 @@
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px; /* Increased gap */
+            gap: 18px;
             margin: 35px 0;
-            justify-items: center; 
         }
 
         .stat-card {
             background-color: var(--card-bg);
             border-radius: var(--card-radius);
-            padding: 1.5rem 1rem;
+            padding: var(--card-padding);
             text-align: center;
             box-shadow: 0 5px 18px rgba(0, 0, 0, var(--shadow-intensity));
             border-top: 5px solid var(--primary);
@@ -310,10 +306,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-around;
+            justify-content: center;
             border: 1px solid var(--highlight-border);
-            width: 100%; 
-            min-height: 180px; 
         }
         
         .stat-card:hover {
@@ -321,16 +315,15 @@
             box-shadow: 0 10px 28px rgba(var(--primary-rgb), var(--shadow-intensity));
         }
         
-        .stat-icon { font-size: 2.2rem; color: var(--primary); margin: 0; }
+        .stat-icon { font-size: 2.2rem; color: var(--primary); margin-bottom: 16px; }
         .stat-value {
             font-family: 'Montserrat', sans-serif;
             font-size: 2.2rem;
             font-weight: 700;
-            margin: 0.5rem 0; 
-            line-height: 1.2;
+            margin-bottom: 12px;
             color: var(--light);
         }
-        .stat-label { font-size: 0.95rem; color: var(--light-muted); margin: 0; }
+        .stat-label { font-size: 0.95rem; color: var(--light-muted); }
 
         .swot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0; }
         .swot-card {
@@ -410,18 +403,18 @@
         .data-table tr:last-child td { border-bottom: none; }
 
         .chart-container {
-            height: auto;
-            width: 100%;
-            aspect-ratio: 16 / 10;
-            max-height: 500px; 
+            height: auto; /* Changed from fixed height */
+            aspect-ratio: 16 / 10; /* Added for responsive aspect ratio */
+            max-height: 500px; /* Optional: to prevent it from becoming too tall on some screens */
             margin: 40px 0;
             background: var(--card-bg);
             border-radius: var(--card-radius);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             padding: 28px;
             border: 1px solid var(--highlight-border);
-            position: relative;
+            position: relative; /* Added for correct chart sizing */
         }
+        /* Special class for square-like charts (Pie/Doughnut) */
         .chart-container-square {
              aspect-ratio: 1 / 1;
         }
@@ -1180,7 +1173,7 @@
                         }]
                     },
                     options: { 
-                        maintainAspectRatio: false, 
+                        maintainAspectRatio: false, // Set to false to fit container
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
