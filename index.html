@@ -299,7 +299,7 @@
         .stat-card {
             background-color: var(--card-bg);
             border-radius: var(--card-radius);
-            padding: var(--card-padding);
+            padding: 1.5rem 1rem;
             text-align: center;
             box-shadow: 0 5px 18px rgba(0, 0, 0, var(--shadow-intensity));
             border-top: 5px solid var(--primary);
@@ -307,9 +307,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around; /* Changed for better vertical distribution */
             border: 1px solid var(--highlight-border);
-            width: 100%; /* Ensure cards take full cell width */
+            width: 100%; 
+            min-height: 180px; /* Added min-height to prevent overlap */
         }
         
         .stat-card:hover {
@@ -317,15 +318,16 @@
             box-shadow: 0 10px 28px rgba(var(--primary-rgb), var(--shadow-intensity));
         }
         
-        .stat-icon { font-size: 2.2rem; color: var(--primary); margin-bottom: 16px; }
+        .stat-icon { font-size: 2.2rem; color: var(--primary); margin: 0; }
         .stat-value {
             font-family: 'Montserrat', sans-serif;
             font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin: 0.5rem 0; /* Adjusted margin */
+            line-height: 1.2;
             color: var(--light);
         }
-        .stat-label { font-size: 0.95rem; color: var(--light-muted); }
+        .stat-label { font-size: 0.95rem; color: var(--light-muted); margin: 0; }
 
         .swot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0; }
         .swot-card {
@@ -405,18 +407,18 @@
         .data-table tr:last-child td { border-bottom: none; }
 
         .chart-container {
-            height: auto; /* Changed from fixed height */
-            aspect-ratio: 16 / 10; /* Added for responsive aspect ratio */
-            max-height: 500px; /* Optional: to prevent it from becoming too tall on some screens */
+            height: auto;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            max-height: 500px; 
             margin: 40px 0;
             background: var(--card-bg);
             border-radius: var(--card-radius);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             padding: 28px;
             border: 1px solid var(--highlight-border);
-            position: relative; /* Added for correct chart sizing */
+            position: relative;
         }
-        /* Special class for square-like charts (Pie/Doughnut) */
         .chart-container-square {
              aspect-ratio: 1 / 1;
         }
@@ -1175,7 +1177,7 @@
                         }]
                     },
                     options: { 
-                        maintainAspectRatio: false, // Set to false to fit container
+                        maintainAspectRatio: false, 
                         plugins: { 
                             legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
                             title: { display: false }, 
