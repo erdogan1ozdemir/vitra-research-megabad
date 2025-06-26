@@ -16,7 +16,576 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.1.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            /* VitrA Marka Renkleri - Ayarlamalarla daha canlı ve okunabilir */
+            --primary: #00BFB3; /* VitrA Canlı Turkuaz */
+            --primary-rgb: 0, 191, 179;
+            --secondary: #6B7A8F; /* VitrA Mavi Gri */
+            --secondary-rgb: 107, 122, 143;
+
+            /* Temel Renkler - Arka plan ve metin için */
+            --dark: #2c2c2c; /* Daha koyu arka plan */
+            --dark-sidebar: #1a1a1a;
+            --light: #F8F8F8;
+            --light-muted: #D1D5DB; /* Increased contrast for muted text */
+            --background: #3a3a3a; /* Kart arka planı */
+            
+            /* Durum Renkleri - VitrA tonlarında daha canlı */
+            --success: #6ACCBC;
+            --warning: #FFD166;
+            --danger: #EF476F;
+
+            /* Vurgu ve Kenarlıklar */
+            --highlight-border: #555555;
+            --highlight-bg: rgba(var(--primary-rgb), 0.1);
+            --info-note-bg: rgba(var(--primary-rgb), 0.15);
+            --info-note-border: var(--primary);
+            --analysis-note-bg: rgba(var(--secondary-rgb), 0.15);
+            --analysis-note-border: var(--secondary);
+
+            
+            /* Genel Stil Parametreleri */
+            --text-color: var(--light);
+            --heading-color: var(--light);
+            --card-bg: var(--background);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --border-color: var(--highlight-border);
+            
+            /* UI/UX için ayarlanmış değerler */
+            --base-font-size: 16px;
+            --section-spacing: 60px;
+            --card-padding: 1.8rem;
+            --card-radius: 12px;
+            --shadow-intensity: 0.3;
+            --chart-height: 420px;
+            --sidebar-width: 280px;
+
+            /* Sidebar Aktif/Hover Renkleri */
+            --sidebar-active-bg: rgba(var(--primary-rgb), 0.25);
+            --sidebar-hover-bg: rgba(var(--primary-rgb), 0.15);
+            --sidebar-active-color: var(--primary);
+            --sidebar-hover-color: var(--primary);
+            --sidebar-normal-color: var(--light);
+
+            /* Link Rengi */
+            --link-color: #43bab2;
+        }
+
+        html { font-size: var(--base-font-size); scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark-sidebar);
+            color: var(--sidebar-normal-color);
+            padding: 20px 0;
+            box-shadow: 2px 0 10px var(--shadow-color);
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            transform: translateX(0);
+        }
+
+        .sidebar.hidden { transform: translateX(-100%); }
+
+        .logo {
+            text-align: center;
+            padding: 10px 0 20px 0;
+            border-bottom: 1px solid var(--highlight-border);
+            margin-bottom: 20px;
+        }
+
+        .logo h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: var(--light);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            transition: margin-left 0.3s ease-in-out;
+            position: relative;
+            background-color: var(--dark);
+        }
+
+        .main-content.expanded { margin-left: 0; }
+
+        .header {
+            position: relative;
+            margin-bottom: 45px;
+            padding: 35px;
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--highlight-border);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2.6rem;
+            margin: 0;
+            color: var(--primary);
+        }
+        
+        .section {
+            margin-bottom: var(--section-spacing);
+            scroll-margin-top: 80px; /* Adjusted for better scroll positioning */
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 14px;
+            border-bottom: 1.5px solid var(--highlight-border);
+        }
+
+        .section-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 16px;
+            color: var(--dark-sidebar);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.9rem;
+            color: var(--heading-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: var(--card-padding);
+            border-radius: var(--card-radius);
+            box-shadow: 0 5px 18px rgba(0, 0, 0, var(--shadow-intensity));
+            margin-bottom: 28px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--highlight-border);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 28px rgba(var(--primary-rgb), 0.2);
+            border-color: rgba(var(--primary-rgb), 0.7);
+        }
+
+        .card h3, .card h4, .card h5 {
+            font-family: 'Montserrat', sans-serif;
+            margin-top:0;
+            margin-bottom: 16px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .card h3 { font-size: 1.5rem; }
+        .card h4 { font-size: 1.3rem; color: var(--light); }
+        .card h5 { font-size: 1.2rem; }
+
+
+        .card p, .card ul li, .card ol li {
+            color: var(--light-muted);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .card p strong, .card ul li strong, .card ol li strong {
+            color: var(--light);
+            font-weight: 700;
+        }
+        
+        .card a, .section-reference-link a {
+            color: var(--link-color);
+            text-decoration: underline;
+            font-weight: 600;
+            margin: 0 4px;
+        }
+
+        .card a:hover, .section-reference-link a:hover { color: var(--secondary); }
+        
+        .highlight-numerical {
+            font-weight: 700;
+            color: var(--warning);
+            background-color: rgba(255, 209, 102, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .highlight-context {
+            font-weight: 700;
+            color: var(--success);
+            background-color: rgba(106, 204, 188, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .content-block-grid {
+            display: grid;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        @media (min-width: 992px) {
+            .content-block-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .content-block-grid .card { margin-bottom: 0; }
+        
+        .info-note, .analysis-note {
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 9px 9px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .info-note {
+            background: var(--info-note-bg);
+            border-left: 5px solid var(--info-note-border);
+        }
+        .analysis-note {
+            background: var(--analysis-note-bg);
+            border-left: 5px solid var(--analysis-note-border);
+        }
+        .info-note p, .analysis-note p { 
+            color: var(--light-muted); 
+            font-size: 0.9rem; 
+            margin: 0; 
+            flex: 1;
+        }
+        .info-note i, .analysis-note i {
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
+        }
+        .info-note i { color: var(--primary); }
+        .analysis-note i { color: var(--secondary); }
+        .info-note p strong { color: var(--primary); }
+        .analysis-note p strong { color: var(--secondary); }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin: 35px 0;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: var(--card-padding);
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, var(--shadow-intensity));
+            border-top: 5px solid var(--primary);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--highlight-border);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 28px rgba(var(--primary-rgb), var(--shadow-intensity));
+        }
+        
+        .stat-icon { font-size: 2.2rem; color: var(--primary); margin-bottom: 16px; }
+        .stat-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--light);
+        }
+        .stat-label { font-size: 0.95rem; color: var(--light-muted); }
+
+        .swot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0; }
+        .swot-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--highlight-border);
+        }
+        .swot-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1.5px solid var(--highlight-border);
+            display: flex;
+            align-items: center;
+        }
+        .swot-title i { margin-right: 12px; font-size: 1.2em; width: 30px; text-align: center; }
+        .swot-strengths { border-top: 5px solid var(--success); }
+        .swot-weaknesses { border-top: 5px solid var(--danger); }
+        .swot-opportunities { border-top: 5px solid var(--primary); }
+        .swot-threats { border-top: 5px solid var(--warning); }
+        .swot-strengths .swot-title { color: var(--success); }
+        .swot-weaknesses .swot-title { color: var(--danger); }
+        .swot-opportunities .swot-title { color: var(--primary); }
+        .swot-threats .swot-title { color: var(--warning); }
+        .swot-list { list-style-type: none; padding-left: 0; margin-top: 1rem; }
+        .swot-item {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--light-muted);
+            font-size: 0.9rem;
+        }
+        .swot-item::before {
+            position: absolute;
+            left: 4px;
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 1em;
+        }
+        .swot-strengths .swot-item::before { content: "\f00c"; color: var(--success); }
+        .swot-weaknesses .swot-item::before { content: "\f00d"; color: var(--danger); }
+        .swot-opportunities .swot-item::before { content: "\f0eb"; color: var(--primary); }
+        .swot-threats .swot-item::before { content: "\f071"; color: var(--warning); }
+
+        .data-table-wrapper { overflow-x: auto; margin: 35px 0; }
+        .data-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, var(--shadow-intensity));
+            border: 1px solid var(--highlight-border);
+        }
+        .data-table caption {
+            font-size: 1.25rem;
+            font-family: var(--font-heading);
+            caption-side: top;
+            padding: 1rem;
+            text-align: left;
+            color: var(--light);
+            background-color: var(--background);
+        }
+        .data-table th {
+            background: var(--primary);
+            color: var(--dark-sidebar);
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .data-table tr:nth-child(even) { background-color: rgba(0,0,0, 0.2); }
+        .data-table tr:hover { background-color: rgba(var(--primary-rgb), 0.18); }
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--highlight-border);
+            color: var(--light-muted);
+            font-size: 0.9rem;
+        }
+        .data-table td strong { color: var(--light); }
+        .data-table tr:last-child td { border-bottom: none; }
+        
+        .highlight-row {
+            background-color: rgba(var(--warning-rgb), 0.15) !important;
+            border-left: 3px solid var(--warning);
+        }
+
+        .chart-container {
+            height: var(--chart-height);
+            margin: 40px 0;
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            padding: 28px;
+            border: 1px solid var(--highlight-border);
+            position: relative; /* Added for correct chart sizing */
+        }
+        .chart-container h4 {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        .back-to-top {
+            position: fixed; bottom: 35px; right: 35px; width: 55px; height: 55px;
+            background-color: var(--primary); border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+            cursor: pointer; z-index: 999; opacity: 0; visibility: hidden;
+            transition: all 0.4s ease; text-decoration: none; color: var(--dark-sidebar); font-size: 26px;
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { background-color: var(--secondary); transform: translateY(-4px); }
+
+        .progress-bar {
+            position: fixed; top: 0; left: var(--sidebar-width); height: 5px;
+            background: var(--primary); z-index: 1001; width: 0%;
+            transition: width 0.1s linear, left 0.3s ease-in-out;
+        }
+
+        ul, ol { padding-left: 28px; margin: 16px 0; }
+        ul li, ol li { margin-bottom: 10px; color: var(--light-muted); font-size: 0.95rem; }
+        .card ul, .card ol {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        .card ul li, .card ol li {
+            padding-left: 10px;
+        }
+
+
+        .menu-toggle {
+            display: none; /* Hidden by default on desktop */
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--primary);
+            color: var(--dark-sidebar);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        /* Sidebar Nav Styling */
+        .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar nav ul li { margin-bottom: 0; }
+        .nav-group { margin-bottom: 10px; } /* Reduced from 13px */
+        .nav-group:last-child { margin-bottom: 0; }
+        .nav-title {
+            padding: 6px 20px; /* Reduced from 8px */
+            font-size: 0.7rem; /* Reduced from 0.75rem */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--light-muted);
+            font-weight: 600;
+            margin-top: 8px; /* Reduced from 10px */
+            margin-bottom: 4px; /* Reduced from 5px */
+            border-bottom: 1px solid var(--highlight-border);
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px; /* Reduced from 10px */
+            color: var(--sidebar-normal-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+            font-size: 0.9rem; /* Reduced from 0.95rem */
+        }
+        .nav-item i { font-size: 1.1em; margin-right: 12px; width: 20px; text-align: center; }
+        .nav-item:hover {
+            background-color: var(--sidebar-hover-bg);
+            color: var(--sidebar-hover-color);
+            transform: translateX(3px);
+        }
+        .nav-item:hover i { color: var(--sidebar-hover-color); }
+        .nav-item.active {
+            background-color: var(--sidebar-active-bg);
+            color: var(--sidebar-active-color);
+            border-left: 4px solid var(--primary);
+            padding-left: 16px;
+            font-weight: bold;
+        }
+        .nav-item.active i { color: var(--sidebar-active-color); }
+        .nav-badge {
+            margin-left: auto;
+            font-size: 0.75rem;
+            background: var(--secondary);
+            color: var(--light);
+            border-radius: 9px;
+            padding: 3px 7px;
+            font-weight: 700;
+        }
+        .nav-item.active .nav-badge { background: var(--primary); color: var(--dark-sidebar); }
+
+        .section-reference-link {
+            font-size: 0.8rem;
+            color: var(--light-muted);
+            text-align: right;
+            margin-top: 20px;
+            word-wrap: break-word;
+        }
+
+        .mockup-card {
+            background-color: #4a4a4a;
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .mockup-card .mockup-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .mockup-card-pinterest .mockup-icon { color: #E60023; }
+        .mockup-card-youtube .mockup-icon { color: #FF0000; }
+        .mockup-card p {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--light);
+        }
+        .mockup-card span {
+            font-size: 0.9rem;
+            color: var(--light-muted);
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .main-content.expanded { margin-left: 0; }
+            .progress-bar { left: 0 !important; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; }
+            .swot-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2rem; }
+            .section-title { font-size: 1.8rem; }
+            .content-block-grid, .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
@@ -87,36 +656,13 @@
                 <p>Bu rapor, Almanya’nın önde gelen banyo ürünleri e-ticaret platformlarından `megabad.com` için kapsamlı bir pazar, rekabet ve SEO analizi sunmaktadır. VitrA’nın global marketplace'lerde büyüme stratejisi doğrultusunda hazırlanan bu çalışma, markanın `megabad.com` üzerindeki konumunu güçlendirmek, rekabet avantajı sağlamak ve somut büyüme fırsatlarını ortaya koymak amacıyla gerçekleştirilmiştir.</p>
                 <p>Analizimiz, `megabad.com`'un <strong class="highlight-context">pazar lideri</strong> konumunu, <strong class="highlight-context">geniş ürün yelpazesini</strong> ve <strong class="highlight-context">güçlü marka bilinirliğini</strong> teyit etmektedir. Bununla birlikte, ana rakip `reuter.de`'ye kıyasla <strong class="highlight-numerical">organik trafik</strong> ve <strong class="highlight-numerical">premium segment algısında</strong> gelişim alanları bulunmaktadır. Rapor, bu alanları VitrA için birer fırsata dönüştürecek stratejik öneriler sunmaktadır.</p>
                 
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i aria-hidden="true" class="fas fa-users"></i></div>
-                        <div class="stat-value">1.2M</div>
-                        <div class="stat-label">Aylık Ziyaretçi</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i aria-hidden="true" class="fas fa-chart-line"></i></div>
-                        <div class="stat-value">€5.48M</div>
-                        <div class="stat-label">Tahmini Aylık Gelir</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i aria-hidden="true" class="fas fa-shopping-cart"></i></div>
-                        <div class="stat-value">€370</div>
-                        <div class="stat-label">Ortalama Sepet Değeri</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i aria-hidden="true" class="fas fa-globe-europe"></i></div>
-                        <div class="stat-value">#1</div>
-                        <div class="stat-label">Almanya Pazar Konumu</div>
-                    </div>
-                </div>
-
                 <div class="content-block-grid">
                     <div class="card">
                         <h3>Ana Bulgular</h3>
                         <ul>
-                            <li><strong>Pazar Liderliği:</strong> Megabad, <strong class="highlight-numerical">1.2 milyon</strong> aylık ziyaretçi ile Almanya'nın en büyük online banyo perakendecisidir.</li>
-                            <li><strong>Marka Gücü:</strong> Trafiğin <strong class="highlight-numerical">%50.75'i</strong> doğrudan (direct) kanaldan gelmektedir, bu da yüksek marka bilinirliğini gösterir.</li>
-                            <li><strong>Organik Zayıflık:</strong> Organik trafik oranı (<strong class="highlight-numerical">%20.35</strong>), premium rakip Reuter'in (<strong class="highlight-numerical">%41</strong>) gerisindedir.</li>
+                            <li><strong>Pazar Liderliği:</strong> Megabad, <strong class="highlight-numerical">1.1 milyon+</strong> aylık ziyaretçi ile Almanya'nın en büyük online banyo perakendecilerindendir.</li>
+                            <li><strong>Marka Gücü:</strong> Trafiğin <strong class="highlight-numerical">~%33'ü</strong> doğrudan (direct) kanaldan gelmektedir, bu da yüksek marka bilinirliğini gösterir.</li>
+                            <li><strong>Organik Rekabet:</strong> Organik trafik oranı (<strong class="highlight-numerical">~%41</strong>), premium rakip Reuter'in (<strong class="highlight-numerical">~%44</strong>) hafif gerisindedir, ancak pazarın en büyük organik trafiğine sahiptir.</li>
                             <li><strong>Pazar Konumlandırması:</strong> Geniş kitleye hitap eden <strong class="highlight-context">orta ve orta-üst segmente</strong> odaklanmıştır.</li>
                         </ul>
                     </div>
@@ -126,7 +672,7 @@
                             <li><strong>İçerik Ortaklığı:</strong> Megabad'ın "Ratgeber" (rehber) sayfalarında VitrA'nın teknik ve tasarım uzmanlığını sergileyen içerikler oluşturmak.</li>
                             <li><strong>Premium Algı Yaratma:</strong> VitrA'nın inovatif ve ödüllü tasarımlarını özel "Markenwelt" (Marka Dünyası) sayfalarında konumlandırmak.</li>
                             <li><strong>SEO Optimizasyonu:</strong> "VitrA waschbecken" gibi arama hacmi <strong class="highlight-numerical">%50</strong> artan marka+ürün sorgularında liderliği hedeflemek.</li>
-                            <li><strong>Sürdürülebilirlik İletişimi:</strong> VitrA'nın çevre dostu üretim anlayışını, Alman tüketicisinin artan ilgisine yönelik vurgulamak.</li>
+                            <li><strong>Referral Trafiği:</strong> Megabad'in <strong class="highlight-numerical">chat.gpt.com</strong>'dan aldığı <strong class="highlight-numerical">%3.5'lik</strong> referral trafiğini VitrA lehine kullanacak içerik stratejileri geliştirmek.</li>
                         </ul>
                     </div>
                 </div>
@@ -137,7 +683,6 @@
                 </div>
                 <p class="section-reference-link">Referanslar: 
                     <a href="https://www.similarweb.com/website/megabad.com/" target="_blank" rel="noopener noreferrer">Similarweb</a>, 
-                    <a href="https://gripsintelligence.com/insights/retailers/megabad.com" target="_blank" rel="noopener noreferrer">Grips Intelligence</a>, 
                     <a href="https://www.mordorintelligence.com/industry-reports/germany-bathroom-furniture-market" target="_blank" rel="noopener noreferrer">Mordor Intelligence</a>
                 </p>
             </section>
@@ -199,7 +744,7 @@
                     <a href="https://www.ada-cosmetics.com/magazine/hotel-cosmetics/bathroom-trends/" target="_blank" rel="noopener noreferrer">ADA Cosmetics Trend Report</a>
                 </p>
             </section>
-
+            
             <section id="rekabet-ortami" class="section">
                 <div class="section-header">
                     <div class="section-icon"><i aria-hidden="true" class="fas fa-users-line"></i></div>
@@ -222,6 +767,52 @@
                     <h4>Trafik Kanalı Karşılaştırması: Megabad vs. Reuter (%)</h4>
                     <canvas id="trafficChannelComparisonChart"></canvas>
                 </div>
+
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <caption>Megabad.com En Önemli Yönlendirme Kaynakları (Referrals)</caption>
+                        <thead>
+                            <tr>
+                                <th>Kaynak Website</th>
+                                <th>Trafik Payı</th>
+                                <th>Değişim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>kelkoogroup.net</td>
+                                <td><strong>64.07%</strong></td>
+                                <td><i class="fas fa-arrow-up" style="color:var(--success);"></i> 2.67%</td>
+                            </tr>
+                            <tr>
+                                <td>idealo.de</td>
+                                <td><strong>17.03%</strong></td>
+                                <td><i class="fas fa-arrow-down" style="color:var(--danger);"></i> 28.04%</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>chat.gpt.com</strong></td>
+                                <td><strong>3.51%</strong></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>app.kameleoon.com</td>
+                                <td><strong>3.07%</strong></td>
+                                <td>-</td>
+                            </tr>
+                             <tr>
+                                <td>app.milanote.com</td>
+                                <td><strong>2.04%</strong></td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <div class="info-note">
+                    <i aria-hidden="true" class="fas fa-robot"></i>
+                    <p><strong>Yeni Fırsat - Üretken Yapay Zeka Trafiği:</strong> Megabad'in yönlendirme trafiğinin <strong class="highlight-numerical">%3.51'i</strong> `chat.gpt.com` üzerinden gelmektedir. Bu, kullanıcıların banyo ürünleri ve tasarımı hakkında doğrudan yapay zekaya danıştığını ve Megabad'in bu sorgularda bir cevap olarak konumlandığını göstermektedir. VitrA için bu kanala özel içerik ve ürün bilgisi stratejileri geliştirmek, satın alma yolculuğunun en başında müşteriye ulaşma imkanı sunar.</p>
+                </div>
+
+
                 <p class="section-reference-link">Referanslar: 
                     <a href="https://www.similarweb.com/website/megabad.com/competitors/" target="_blank" rel="noopener noreferrer">Similarweb</a>, 
                     <a href="https://www.sistrix.com/visibility-index/" target="_blank" rel="noopener noreferrer">SISTRIX Visibility Index</a>
@@ -237,7 +828,7 @@
                     <div class="swot-card swot-strengths">
                         <h3 class="swot-title"><i aria-hidden="true" class="fas fa-thumbs-up"></i>Güçlü Yönler</h3>
                         <ul class="swot-list">
-                            <li class="swot-item">Almanya pazarında <strong class="highlight-context">açık ara lider</strong> konum (<strong class="highlight-numerical">1.2M</strong> ziyaretçi).</li>
+                            <li class="swot-item">Almanya pazarında <strong class="highlight-context">açık ara lider</strong> konum (<strong class="highlight-numerical">1.1M+</strong> ziyaretçi).</li>
                             <li class="swot-item"><strong class="highlight-context">Geniş ürün yelpazesi</strong> (<strong class="highlight-numerical">500.000+</strong> ürün) ve stok gücü.</li>
                             <li class="swot-item">90 yıllık geçmişe dayalı <strong class="highlight-context">yüksek marka güveni</strong> ve direct trafik.</li>
                             <li class="swot-item">Gelişmiş lojistik ve <strong class="highlight-context">hızlı teslimat</strong> kapasitesi.</li>
@@ -246,10 +837,9 @@
                     <div class="swot-card swot-weaknesses">
                         <h3 class="swot-title"><i aria-hidden="true" class="fas fa-thumbs-down"></i>Zayıf Yönler</h3>
                         <ul class="swot-list">
-                            <li class="swot-item">Reuter'e kıyasla <strong class="highlight-context">daha düşük organik trafik oranı</strong> (<strong class="highlight-numerical">%20.35</strong>).</li>
+                            <li class="swot-item">Reuter'e kıyasla <strong class="highlight-context">daha düşük premium algı</strong>.</li>
                             <li class="swot-item">Teknik SEO'da iyileştirme alanları: <strong class="highlight-context">içerik okunabilirliği ve sayfa hızı</strong>.</li>
-                            <li class="swot-item">Premium segment algısının Reuter kadar <strong class="highlight-context">güçlü olmaması</strong>.</li>
-                            <li class="swot-item">İlham verici içerik ve "magazin" bölümünün <strong class="highlight-context">trafik potansiyelinin altında</strong> kalması.</li>
+                            <li class="swot-item">İlham verici "magazin" ve "rehber" içeriklerinin <strong class="highlight-context">trafik potansiyelinin altında</strong> kalması.</li>
                         </ul>
                     </div>
                     <div class="swot-card swot-opportunities">
@@ -271,10 +861,10 @@
                         </ul>
                     </div>
                 </div>
-                <div class="chart-container">
-                     <h4>Megabad Müşteri Değerlendirmeleri (Platform Bazlı)</h4>
-                     <canvas id="customerReviewsChart"></canvas>
-                </div>
+                 <div class="chart-container">
+                      <h4>Megabad Müşteri Değerlendirmeleri (Platform Bazlı)</h4>
+                      <canvas id="customerReviewsChart"></canvas>
+                 </div>
                  <p class="section-reference-link">Referanslar: 
                     <a href="https://www.trustpilot.com/review/www.megabad.com" target="_blank" rel="noopener noreferrer">Trustpilot</a>, 
                     <a href="https://www.google.com/search?q=megabad+gmbh+rezensionen" target="_blank" rel="noopener noreferrer">Google Reviews</a>, 
@@ -296,6 +886,22 @@
                     <h4>Organik Trafiğin Sayfa Türüne Göre Dağılımı</h4>
                     <canvas id="pageTrafficChart"></canvas>
                 </div>
+
+                <div class="analysis-note">
+                    <i aria-hidden="true" class="fas fa-search-plus"></i>
+                    <p><strong>Rakip Örneği (Reuter.de):</strong> Reuter, kategori ve ürün sayfalarının ötesinde, <strong class="highlight-context">"İlham" ve "Marka Dünyaları"</strong> gibi tematik içerik kümeleri oluşturarak kullanıcıyı satın alma hunisinin farklı aşamalarında yakalamaktadır. Bu yaklaşım, sadece trafik değil, aynı zamanda marka otoritesi ve premium algı inşa eder.</p>
+                </div>
+                <div class="content-block-grid">
+                    <div class="card">
+                        <h4>Örnek: İlham Veren Banyo Dünyaları</h4>
+                        <p>Reuter, "Küçük Banyolar", "Misafir Banyoları" veya "Siyah Banyo Aksesuarları" gibi temalara odaklanan zengin içerik sayfaları sunar. Bu sayfalarda profesyonel görseller, tasarım ipuçları ve doğrudan ilgili ürünlere linkler bulunur. Bu, kullanıcıya sadece ürün satmak yerine bir çözüm ve vizyon sunar.</p>
+                    </div>
+                     <div class="card">
+                        <h4>Örnek: Detaylı Marka Tanıtımları</h4>
+                        <p>Her önemli marka için (VitrA, Grohe, Villeroy & Boch vb.) özel "Markenwelt" (Marka Dünyası) sayfaları oluşturulmuştur. Bu sayfalarda markanın felsefesi, öne çıkan serileri ve teknolojik yenilikleri anlatılır. Bu, markaların hikayelerini anlatarak tüketiciyle daha derin bir bağ kurmalarını sağlar.</p>
+                    </div>
+                </div>
+
                 <p class="section-reference-link">Referanslar: 
                     <a href="https://www.sistrix.de/" target="_blank" rel="noopener noreferrer">SISTRIX</a>, 
                     <a href="https://ahrefs.com/" target="_blank" rel="noopener noreferrer">Ahrefs</a>
@@ -336,6 +942,10 @@
                     <h2 class="section-title">8. Backlink Profili</h2>
                 </div>
                 <p>`megabad.com`, Domain Rating (DR) değeri <strong class="highlight-numerical">45</strong> olan sağlam bir backlink profiline sahiptir. <strong class="highlight-context">Trustedshops.de (DR 90)</strong> ve <strong class="highlight-context">kununu.com (DR 89)</strong> gibi yüksek otoriteli sitelerden backlink almaktadır. Ancak, profilin daha da güçlendirilmesi için sektörle ilgili bloglar (`schoener-wohnen.de`), tasarım portalları ve haber kaynaklarından (`handelsblatt.com`) hedeflenmiş backlink çalışmaları yapılması önerilmektedir.</p>
+                <div class="info-note">
+                    <i aria-hidden="true" class="fas fa-bullseye"></i>
+                    <p><strong>Stratejik Backlink Fırsatı:</strong> Önerilen backlink çalışmalarında VitrA'nın öne çıkarılması, çift yönlü bir fayda sağlar. Bu, yalnızca VitrA marka görünürlüğünü artırmakla kalmaz, aynı zamanda 'VitrA badmöbel' veya 'VitrA armatur' gibi <strong class="highlight-context">marka + kategori sorgularında</strong> Megabad'in sıralama performansını da doğrudan güçlendirir.</p>
+                </div>
             </section>
 
             <section id="icerik-stratejisi" class="section">
@@ -347,6 +957,16 @@
                 <div class="info-note">
                     <i aria-hidden="true" class="fas fa-bullseye"></i>
                     <p><strong>Stratejik Fırsat:</strong> VitrA, bu içerik yapısı içinde "Sponsorlu Uzman Köşesi" olarak yer alabilir. Örneğin, "VitrA Tasarımcılarından Küçük Banyolar için 5 Akıllı Çözüm" gibi bir başlık, hem VitrA markasını konumlandırır hem de `megabad.com`'un içeriğini zenginleştirir. Bu, markayı organik olarak hedef kitlenin zihnine yerleştirir.</p>
+                </div>
+
+                <div class="card">
+                     <h4>Örnek VitrA Uzman Köşesi Konsepti</h4>
+                     <p>Megabad'in "Ratgeber" (Rehber) bölümünde VitrA'nın öne çıkarılacağı bir içerik serisi oluşturulabilir. Bu içerikler hem VitrA'nın marka imajını güçlendirir hem de Megabad ziyaretçilerine katma değerli bilgi sunar.</p>
+                     <ul>
+                         <li><strong>İçerik Başlığı:</strong> "VitrA Tasarım Direktöründen: 2025 Banyo Trendleri ve Akıllı Çözümler"</li>
+                         <li><strong>Görsel Konsept:</strong> VitrA'nın estetik ve minimalist tasarım dilini yansıtan yüksek kaliteli stüdyo ve yaşam alanı fotoğrafları.</li>
+                         <li><strong>İçerik Yapısı:</strong> VitrA'nın sürdürülebilirlik (VitrA Hygiene, su tasarrufu) ve tasarım (ödüllü seriler) konusundaki uzmanlığını vurgulayan, okuyucuya ilham veren ve pratik ipuçları sunan bir makale. İlgili VitrA ürünlerine doğrudan linkler içerir.</li>
+                     </ul>
                 </div>
             </section>
 
@@ -381,21 +1001,59 @@
                     <h2 class="section-title">11. Önceliklendirilmiş Eylem Planı</h2>
                 </div>
                  <div class="content-block-grid">
-                    <div class="card">
-                        <h5>Kısa Vade (1-3 Ay)</h5>
-                        <ul>
-                            <li><strong><span style="color:var(--success); font-weight:700;">Yüksek Etki:</span></strong> Yüksek trafikli kategori sayfalarına VitrA ürünleri için "Premium Seçenek" banner'ları eklemek.</li>
-                            <li><strong><span style="color:var(--success); font-weight:700;">Yüksek Etki:</span></strong> Mobil Core Web Vitals skorlarını iyileştirmek için teknik SEO ekibiyle çalışmak.</li>
-                            <li><strong><span style="color:var(--warning); font-weight:700;">Orta Etki:</span></strong> `megabad.com`'un "Ratgeber" bölümü için ilk sponsorlu VitrA içeriğini (örn: banyo planlama rehberi) hazırlamak.</li>
-                        </ul>
-                    </div>
+                     <div class="card">
+                         <h5>Kısa Vade (1-3 Ay)</h5>
+                         <ul>
+                             <li>
+                                 <strong><span style="color:var(--success); font-weight:700;">Yüksek Etki:</span> Stratejik Ürün Konumlandırma</strong>
+                                 <ul>
+                                     <li>En çok ziyaret edilen "Waschbecken" ve "Badmöbel" kategori sayfalarına, VitrA'nın premium serilerini (örn: Metropole, Integra) öne çıkaran "Tasarımcıların Seçimi" banner'ları yerleştirmek.</li>
+                                 </ul>
+                             </li>
+                             <li>
+                                 <strong><span style="color:var(--success); font-weight:700;">Yüksek Etki:</span> "Ratgeber" İçerik Ortaklığı</strong>
+                                 <ul>
+                                     <li>"Küçük Banyolar için Akıllı Çözümler: VitrA'dan 5 Profesyonel İpucu" başlıklı ilk sponsorlu içeriği yayınlamak ve "kleines bad gestalten" gibi anahtar kelimeleri hedeflemek.</li>
+                                 </ul>
+                             </li>
+                             <li>
+                                 <strong><span style="color:var(--warning); font-weight:700;">Orta Etki:</span> Ürün Verisi ve Görsel Optimizasyonu</strong>
+                                 <ul>
+                                     <li>Megabad'deki tüm VitrA ürün başlıklarını, açıklamalarını ve teknik özelliklerini SEO'ya uygun hale getirmek. Yüksek çözünürlüklü yaşam alanı görselleri ile güncellemek.</li>
+                                 </ul>
+                             </li>
+                              <li>
+                                 <strong><span style="color:var(--warning); font-weight:700;">Orta Etki:</span> ChatGPT & Yönlendirme Stratejisi</strong>
+                                 <ul>
+                                     <li>"VitrA ürünleri Megabad'de bulunur mu?" gibi sorgulara yanıt verecek, VitrA'yı Megabad ile ilişkilendiren SSS içeriği oluşturup yayınlamak.</li>
+                                 </ul>
+                             </li>
+                         </ul>
+                     </div>
                      <div class="card">
                         <h5>Orta Vade (3-6 Ay)</h5>
                         <ul>
                            <li><strong><span style="color:var(--success); font-weight:700;">Yüksek Etki:</span></strong> "Badezimmer" konu kümesini tamamlayan 3 adet destekleyici içerik yayınlamak.</li>
                             <li><strong><span style="color:var(--success); font-weight:700;">Yüksek Etki:</span></strong> `schoener-wohnen.de` gibi yüksek otoriteli bir yaşam tarzı sitesinden VitrA & Megabad odaklı bir backlink almak.</li>
-                           <li><strong><span style="color:var(--warning); font-weight:700;">Orta Etki:</span></strong> VitrA ürünlerini içeren ortak bir sosyal medya (Pinterest/Instagram) yarışması düzenlemek.</li>
+                           <li>
+                                <strong><span style="color:var(--warning); font-weight:700;">Orta Etki:</span> Sosyal Medya İçerik Sinerjisi</strong>
+                                <ul>
+                                    <li>VitrA'nın mevcut yüksek kaliteli Pinterest ve YouTube içeriklerini (tasarım ilhamı, montaj videoları) Megabad'in blog ve sosyal medya kanallarında "VitrA Sunar" formatında paylaşarak marka bilinirliğini artırmak.</li>
+                                </ul>
+                           </li>
                         </ul>
+                         <div class="content-block-grid" style="margin-top: 2rem;">
+                             <div class="mockup-card mockup-card-pinterest">
+                                 <div class="mockup-icon"><i class="fab fa-pinterest-square"></i></div>
+                                 <p>VitrA'dan Banyo İlhamı</p>
+                                 <span>#VitrADesign #BadezimmerInspo</span>
+                             </div>
+                              <div class="mockup-card mockup-card-youtube">
+                                 <div class="mockup-icon"><i class="fab fa-youtube-square"></i></div>
+                                 <p>VitrA Montaj Rehberleri & Tasarım İpuçları</p>
+                                 <span>Megabad'de VitrA Uzmanlığı</span>
+                             </div>
+                         </div>
                     </div>
                 </div>
             </section>
@@ -423,6 +1081,391 @@
         </main>
     </div>
 
-    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Chart.js eklentisini global olarak kaydet
+            Chart.register(ChartDataLabels);
+
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const sections = document.querySelectorAll('.section');
+            const progressBar = document.getElementById('progressBar');
+            const backToTopButton = document.getElementById('backToTop');
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+
+            const toggleSidebar = () => {
+                const isActive = sidebar.classList.toggle('active');
+                if (window.innerWidth <= 1024) {
+                    mainContent.style.filter = isActive ? 'blur(5px)' : 'none';
+                }
+            };
+
+            menuToggle.addEventListener('click', toggleSidebar);
+            
+            const updateActiveLink = () => {
+                let currentActiveSectionId = '';
+                
+                let minDistance = Infinity;
+
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                            const distance = Math.abs(rect.top);
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                currentActiveSectionId = section.id;
+                            }
+                    }
+                });
+
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === currentActiveSectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+
+            function updateProgressBar() {
+                const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                if (scrollTotal <= 0) {
+                    progressBar.style.width = '0%';
+                    return;
+                }
+                const scrolled = (window.scrollY / scrollTotal) * 100;
+                progressBar.style.width = `${scrolled}%`;
+                
+                let sidebarWidth = 0;
+                if (window.innerWidth > 1024 && !sidebar.classList.contains('hidden') && !sidebar.classList.contains('active')) {
+                        sidebarWidth = sidebar.offsetWidth;
+                }
+                progressBar.style.left = `${sidebarWidth}px`;
+            }
+
+            const toggleBackToTop = () => {
+                if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                    backToTopButton.classList.add("visible");
+                } else {
+                    backToTopButton.classList.remove("visible");
+                }
+            };
+
+            window.addEventListener('scroll', () => {
+                updateActiveLink();
+                updateProgressBar();
+                toggleBackToTop();
+            });
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                        if (window.innerWidth <= 1024 && sidebar.classList.contains('active')) {
+                            sidebar.classList.remove('active');
+                            mainContent.style.filter = 'none';
+                        }
+                    }
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                const isSidebarActive = sidebar.classList.contains('active');
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnMenuToggle = menuToggle.contains(event.target);
+
+                if (isSidebarActive && window.innerWidth <= 1024 && !isClickInsideSidebar && !isClickOnMenuToggle) {
+                    sidebar.classList.remove('active');
+                    mainContent.style.filter = 'none';
+                }
+            });
+
+            // Initial state checks
+            updateActiveLink();
+            updateProgressBar();
+            toggleBackToTop();
+
+            // Chart.js Configuration
+            Chart.defaults.font.family = "'Roboto', sans-serif";
+            Chart.defaults.plugins.tooltip.boxPadding = 8;
+            Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            Chart.defaults.plugins.datalabels.color = '#fff';
+            Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.2)';
+            Chart.defaults.color = '#F0F0F0';
+            Chart.defaults.responsive = true;
+            
+            function getCssVarValue(varName) { return getComputedStyle(document.documentElement).getPropertyValue(varName).trim(); }
+
+            // Chart Data & Colors
+            const chartColors = ['#00BFB3', '#FFD166', '#EF476F', '#81A1C1', '#6ACCBC', '#B48EAD'];
+
+            const competitorTrafficData = {
+                labels: ['Megabad', 'Reuter', 'Bernstein', 'Badshop', 'Skybad', 'Emero'],
+                monthlyVisits: [1113, 893, 233.6, 217.1, 202.6, 180.5] // Updated Megabad & Reuter from ~1.2M/950k
+            };
+            const vitraSearchGermanyData = {
+                labels: ['vitra waschbecken', 'vitra wc', 'vitra armatur', 'vitra spülkasten', 'vitra accessoires'],
+                monthlySearchVolume: [590, 590, 320, 260, 170]
+            };
+            const trafficComparisonData = {
+                channels: ['Direct', 'Organic', 'Paid', 'Referrals', 'Social', 'Email'],
+                reuter: [29.1, 43.6, 21.3, 2.2, 2.2, 1.1], // Updated from Similarweb screenshot
+                megabad: [33.2, 41.3, 16.2, 4.9, 3.1, 0.9]  // Updated from Similarweb screenshot
+            };
+            const germanBathroomKeywordsData = {
+                keywords: ['waschbecken', 'badmöbel', 'badewanne', 'duschkabine', 'spiegelschrank', 'badezimmer'],
+                monthlyVolume: [74000, 44000, 43000, 35000, 23000, 40500],
+                competitionLevel: ['Very High', 'High', 'High', 'Medium', 'Medium', 'High']
+            };
+            const megabadCustomerReviewsData = {
+                Platform: ["Trusted Shops", "Google Reviews", "Trustpilot", "Idealo"],
+                Rating: [4.7, 4.2, 3.8, 4.5],
+                Total_Reviews: [25000, 1200, 85, 5000]
+            };
+            const keywordPerformanceData = {
+                labels: ['megabad', 'badewanne', 'aufsatzwaschbecken', 'waschbecken', 'spiegelschrank bad'],
+                traffic: [59200, 10044, 3670, 2662, 1158],
+            };
+            const pagePerformanceData = {
+                labels: ['Ana Sayfa', 'Kategori Sayfaları', 'Ürün Sayfaları', 'Rehber (Ratgeber)', 'Diğer'],
+                trafficPercent: [22, 35, 31, 8, 4],
+            };
+            const competitionMap = {
+                'Very High': 'rgba(239, 71, 111, 0.7)',
+                'High': 'rgba(255, 209, 102, 0.7)',
+                'Medium': 'rgba(107, 122, 143, 0.7)'
+            };
+
+            const createChart = (canvasId, config) => {
+                const ctx = document.getElementById(canvasId)?.getContext('2d');
+                if (ctx) {
+                    if (Chart.getChart(canvasId)) {
+                        Chart.getChart(canvasId).destroy();
+                    }
+                    new Chart(ctx, config);
+                }
+            };
+
+            const renderAllCharts = () => {
+                // Rakip Trafik Analizi
+                createChart('competitorTrafficAnalysisChart', {
+                    type: 'bar',
+                    data: {
+                        labels: competitorTrafficData.labels,
+                        datasets: [{
+                            label: 'Aylık Ziyaretçi (Bin)',
+                            data: competitorTrafficData.monthlyVisits,
+                            backgroundColor: competitorTrafficData.labels.map((label, i) => label === 'Megabad' ? chartColors[0] : chartColors[i % chartColors.length]),
+                        }]
+                    },
+                    options: { 
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', 
+                        plugins: { 
+                            legend: { display: false }, 
+                            title: { display: false }, 
+                            datalabels: { 
+                                color: '#fff', 
+                                anchor: 'center', 
+                                align: 'center',
+                                font: { weight: 'bold' },
+                                formatter: (v) => v.toLocaleString() + 'k' 
+                            } 
+                        }, 
+                        scales: { 
+                            x: { ticks: { color: getCssVarValue('--light-muted'), callback: (v) => v.toLocaleString() + 'k' } }, 
+                            y: { ticks: { color: getCssVarValue('--light-muted') } } 
+                        } 
+                    }
+                });
+
+                // Müşteri Değerlendirmeleri
+                createChart('customerReviewsChart', {
+                    type: 'doughnut',
+                    data: {
+                        labels: megabadCustomerReviewsData.Platform.map((p, i) => `${p} (${megabadCustomerReviewsData.Rating[i]}/5)`),
+                        datasets: [{
+                            label: 'Değerlendirme Sayısı',
+                            data: megabadCustomerReviewsData.Total_Reviews,
+                            backgroundColor: chartColors,
+                            borderColor: getCssVarValue('--card-bg'), 
+                            borderWidth: 3
+                        }]
+                    },
+                    options: { 
+                        maintainAspectRatio: false, // Set to false to fit container
+                        plugins: { 
+                            legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
+                            title: { display: false }, 
+                            datalabels: { 
+                                formatter: (v, ctx) => (v * 100 / ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0)).toFixed(0) + "%", 
+                                color: '#000', 
+                                font: { weight: 'bold' } 
+                            } 
+                        } 
+                    }
+                });
+
+                // Trafik Kanalı Karşılaştırması
+                createChart('trafficChannelComparisonChart', {
+                    type: 'bar',
+                    data: {
+                        labels: trafficComparisonData.channels,
+                        datasets: [{
+                            label: 'Megabad (%)', data: trafficComparisonData.megabad,
+                            backgroundColor: chartColors[0]
+                        }, {
+                            label: 'Reuter (%)', data: trafficComparisonData.reuter,
+                            backgroundColor: chartColors[3]
+                        }]
+                    },
+                    options: { 
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
+                            title: { display: false }, 
+                            datalabels: { 
+                                formatter: (v) => v.toFixed(1) + '%', 
+                                color: '#fff',
+                                anchor: 'end',
+                                align: 'top',
+                                font: { weight: 'bold' }
+                            } 
+                        }, 
+                        scales: { 
+                            y: { ticks: { color: getCssVarValue('--light-muted'), callback: (v) => v + '%' } }, 
+                            x: { ticks: { color: getCssVarValue('--light-muted') } } 
+                        } 
+                    }
+                });
+
+                // VitrA Markalı Aramalar
+                createChart('vitraSearchVolumeChart', {
+                    type: 'bar',
+                    data: {
+                        labels: vitraSearchGermanyData.labels,
+                        datasets: [{
+                            label: 'Aylık Arama Hacmi', 
+                            data: vitraSearchGermanyData.monthlySearchVolume,
+                            backgroundColor: chartColors
+                        }]
+                    },
+                    options: { 
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false }, 
+                            title: { display: false }, 
+                            datalabels: { 
+                                anchor: 'end', 
+                                align: 'top',
+                                font: { weight: 'bold' },
+                                color: '#fff' 
+                            } 
+                        }, 
+                        scales: { 
+                            x: { ticks: { color: getCssVarValue('--light-muted'), maxRotation: 45, minRotation: 30 } }, 
+                            y: { ticks: { color: getCssVarValue('--light-muted') } } 
+                        } 
+                    }
+                });
+                
+                // En Çok Trafik Getiren Kelimeler
+                createChart('keywordTrafficChart', {
+                    type: 'bar',
+                    data: {
+                            labels: keywordPerformanceData.labels,
+                            datasets: [{
+                                label: 'Tahmini Aylık Trafik',
+                                data: keywordPerformanceData.traffic,
+                                backgroundColor: chartColors
+                            }]
+                    },
+                    options: { 
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', 
+                        plugins: { 
+                            legend: { display: false }, 
+                            title: { display: false }, 
+                            datalabels: { 
+                                anchor: 'center', 
+                                align: 'center',
+                                font: { weight: 'bold' },
+                                color: '#000',
+                                formatter: v => v.toLocaleString() 
+                            } 
+                        }, 
+                        scales: { 
+                            x: { ticks: { color: getCssVarValue('--light-muted'), callback: v => v.toLocaleString() } }, 
+                            y: { ticks: { color: getCssVarValue('--light-muted') } } 
+                        } 
+                    }
+                });
+
+                // Organik Trafik Dağılımı
+                createChart('pageTrafficChart', {
+                    type: 'pie',
+                    data: {
+                        labels: pagePerformanceData.labels,
+                        datasets: [{
+                            label: 'Trafik Yüzdesi (%)',
+                            data: pagePerformanceData.trafficPercent,
+                            backgroundColor: chartColors
+                        }]
+                    },
+                    options: { 
+                        maintainAspectRatio: false, // Set to false to fit container
+                        plugins: { 
+                            legend: { position: 'top', labels: {color: getCssVarValue('--light-muted')} }, 
+                            title: { display: false }, 
+                            datalabels: { 
+                                formatter: (v) => v + '%', 
+                                color: '#000', 
+                                font: { weight: 'bold' } 
+                            } 
+                        } 
+                    }
+                });
+                
+                // Keyword Bubble Chart
+                createChart('germanBathroomKeywordsBubbleChart', {
+                    type: 'bubble',
+                    data: {
+                        datasets: germanBathroomKeywordsData.keywords.map((kw, i) => ({
+                            label: kw,
+                            data: [{
+                                x: germanBathroomKeywordsData.monthlyVolume[i],
+                                y: Math.random() * 100,
+                                r: Math.sqrt(germanBathroomKeywordsData.monthlyVolume[i] / 500)
+                            }],
+                            backgroundColor: competitionMap[germanBathroomKeywordsData.competitionLevel[i]]
+                        }))
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false },
+                            tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.raw.x.toLocaleString()} (Hacim)` } },
+                            datalabels: {
+                                color: '#fff', font: { weight: 'bold', size: 10 },
+                                formatter: (v, ctx) => ctx.dataset.label
+                            }
+                        },
+                        scales: {
+                            x: { title: { display: true, text: 'Aylık Arama Hacmi', color: getCssVarValue('--light-muted') }, ticks: { color: getCssVarValue('--light-muted'), callback: v => (v/1000)+'k' } },
+                            y: { display: false }
+                        }
+                    }
+                });
+            };
+
+            renderAllCharts();
+            window.addEventListener('resize', renderAllCharts);
+        });
+    </script>
 </body>
 </html>
